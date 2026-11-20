@@ -1,0 +1,28 @@
+{
+  "total_decisions": 68,
+  "calibration_decisions": 64,
+  "calibration_episode_steps": 16,
+  "batch": 8,
+  "hidden": [16, 16],
+  "capacity": 256,
+  "save_every": 2,
+  "log_every": 1,
+  "pure": {
+    "contact_supervision": "aggregate_ports",
+    "horizon_steps": 2,
+    "substeps": 1,
+    "candidates": 4,
+    "elites": 2,
+    "iterations": 1,
+    "contact_iterations": 6,
+    "model_refit_every": 512
+  },
+  "sensing": {
+    "sensor_period": 0.004,
+    "sensor_delay": 0.004,
+    "friction_events": [
+      {"time": 0.02, "scale": 0.4},
+      {"time": 0.05, "scale": 1.0}
+    ]
+  }
+}

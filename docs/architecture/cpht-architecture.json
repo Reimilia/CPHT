@@ -1,0 +1,112 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "CPHT / TPHT benchmark: code architecture (v3.7)",
+    "output": "docs/architecture/cpht-architecture.html",
+    "quality_profile": "showcase",
+    "locale": "en",
+    "repository": {
+      "url": "https://github.com/Reimilia/CPHT",
+      "provider": "github",
+      "link_mode": "web",
+      "revision": "23fa4631f126d9fb453758d394af423a21badd1d"
+    }
+  },
+  "components": [
+    { "id": "researcher", "type": "external", "label": "Researcher", "sublabel": "CPU / SLURM", "pos": [40, 40], "size": [120, 60] },
+    { "id": "launchers", "type": "frontend", "label": "Launchers", "sublabel": "scripts/*.sh, dry by default", "pos": [250, 40], "size": [960, 60],
+      "sources": [
+        { "path": "scripts/run_cpht_comparison.sh", "line": 1, "end_line": 24, "label": "comparison stages" },
+        { "path": "scripts/run_mujoco_reference.sh", "line": 1, "end_line": 18, "label": "reference audit" },
+        { "path": "scripts/run_case.sh", "line": 30, "end_line": 66, "label": "F/J plans" }
+      ] },
+    { "id": "calib", "type": "backend", "label": "Calibration", "sublabel": "32 pH + 4 contact", "pos": [40, 190], "size": [140, 64],
+      "sources": [
+        { "path": "physical_fj/prepare.py", "line": 61, "end_line": 154, "label": "acquire + fit" },
+        { "path": "pure_cpht/learning.py", "line": 20, "end_line": 43, "label": "positive mechanics fit" },
+        { "path": "pure_cpht/learning.py", "line": 110, "end_line": 137, "label": "fit_all" }
+      ] },
+    { "id": "artifacts", "type": "database", "label": "artifacts/", "sublabel": "pure_model_*.json", "pos": [40, 340], "size": [140, 64],
+      "sources": [ { "path": "pure_cpht/learning.py", "line": 139, "end_line": 159, "label": "prepare_artifact writes" } ] },
+    { "id": "compare", "type": "backend", "label": "cpht_compare", "sublabel": "CEM / shoot / selector", "pos": [250, 190], "size": [180, 64],
+      "sources": [
+        { "path": "cpht_compare/pipeline.py", "line": 22, "end_line": 34, "label": "preparation" },
+        { "path": "cpht_compare/pipeline.py", "line": 52, "end_line": 166, "label": "training" },
+        { "path": "cpht_compare/learning.py", "line": 37, "end_line": 111, "label": "BPTT + TD(lambda)" }
+      ] },
+    { "id": "phmodel", "type": "backend", "label": "Learned pH model", "sublabel": "M(q), contact, box QP", "pos": [520, 190], "size": [180, 64],
+      "sources": [
+        { "path": "pure_cpht/mechanics.py", "line": 47, "end_line": 138, "label": "Robot: M, c, H" },
+        { "path": "pure_cpht/contact.py", "line": 29, "end_line": 96, "label": "contact closure" },
+        { "path": "pure_cpht/controller.py", "line": 42, "end_line": 139, "label": "feedback + plan" }
+      ] },
+    { "id": "reference", "type": "backend", "label": "MuJoCo reference", "sublabel": "LS / FD / MPC, replay", "pos": [790, 190], "size": [180, 64],
+      "sources": [
+        { "path": "mujoco_reference/pipeline.py", "line": 175, "end_line": 224, "label": "run + samples" },
+        { "path": "mujoco_reference/controller.py", "line": 15, "end_line": 169, "label": "native controllers" },
+        { "path": "mujoco_reference/transition.py", "line": 64, "end_line": 210, "label": "capture audit" }
+      ] },
+    { "id": "matched", "type": "backend", "label": "Matched CT/CP/TP", "sublabel": "Euler + pH solvers", "pos": [1040, 190], "size": [170, 64],
+      "sources": [
+        { "path": "fjbench/runner.py", "line": 21, "end_line": 187, "label": "train loop" },
+        { "path": "fjbench/agent.py", "line": 69, "end_line": 197, "label": "targets per method" },
+        { "path": "fjbench/finite.py", "line": 68, "end_line": 131, "label": "finite solve" }
+      ] },
+    { "id": "physenv", "type": "backend", "label": "Sensed environment", "sublabel": "exact q, v, force ports + terrain belief", "pos": [250, 340], "size": [720, 64],
+      "sources": [
+        { "path": "physical_fj/mechanics.py", "line": 54, "end_line": 154, "label": "PhysicalEnvironment" },
+        { "path": "environment_belief/runtime.py", "line": 12, "end_line": 122, "label": "belief runtime" }
+      ] },
+    { "id": "fjenv", "type": "backend", "label": "F/J cheetah cases", "sublabel": "holds, friction, payload, OU wind, terrain", "pos": [250, 490], "size": [960, 64],
+      "sources": [
+        { "path": "fjbench/environment.py", "line": 18, "end_line": 247, "label": "Environment" },
+        { "path": "fjbench/config.py", "line": 30, "end_line": 222, "label": "case settings" }
+      ] },
+    { "id": "vendor", "type": "database", "label": "CT-RL source zip", "sublabel": "vendor/, pinned", "pos": [340, 640], "size": [180, 64],
+      "sources": [ { "path": "bench/protocol.py", "line": 17, "end_line": 17, "label": "SOURCE_SHA256" } ] },
+    { "id": "wrapper", "type": "security", "label": "Pinned CT-RL wrapper", "sublabel": "hash-checked, 2 ms substeps", "pos": [640, 640], "size": [180, 64],
+      "sources": [
+        { "path": "bench/protocol.py", "line": 51, "end_line": 95, "label": "source_root" },
+        { "path": "bench/env.py", "line": 39, "end_line": 162, "label": "make_common_env" }
+      ] },
+    { "id": "mujoco", "type": "external", "label": "MuJoCo 3.17", "sublabel": "dm_control cheetah", "pos": [910, 640], "size": [180, 64],
+      "sources": [ { "path": "requirements-physical-first.txt", "line": 5, "end_line": 5, "label": "pinned version" } ] }
+  ],
+  "connections": [
+    { "id": "launch", "from": "researcher", "to": "launchers", "label": "DRY_RUN=0", "variant": "emphasis" },
+    { "id": "run-compare", "from": "launchers", "to": "compare", "label": "train / eval", "variant": "emphasis" },
+    { "id": "run-reference", "from": "launchers", "to": "reference", "label": "SENSOR_ROOT" },
+    { "id": "run-matched", "from": "launchers", "to": "matched", "label": "plan + train" },
+    { "id": "prepare", "from": "compare", "to": "calib", "label": "prepare" },
+    { "id": "write-model", "from": "calib", "to": "artifacts", "label": "writes" },
+    { "id": "plan", "from": "compare", "to": "phmodel", "label": "plan + act", "variant": "emphasis" },
+    { "id": "reuse-controller", "from": "reference", "to": "phmodel", "label": "Controller" },
+    { "id": "rollouts", "from": "compare", "to": "physenv", "label": "episodes", "variant": "emphasis" },
+    { "id": "audited", "from": "reference", "to": "physenv", "label": "audited steps" },
+    { "id": "transitions", "from": "matched", "to": "fjenv", "label": "transitions" },
+    { "id": "core-step", "from": "physenv", "to": "fjenv", "label": "step(a)", "variant": "emphasis" },
+    { "id": "backend", "from": "fjenv", "to": "wrapper", "label": "make_common_env" },
+    { "id": "verify", "from": "wrapper", "to": "vendor", "label": "sha256 check", "variant": "security" },
+    { "id": "physics", "from": "wrapper", "to": "mujoco", "label": "mj_step" }
+  ],
+  "cards": [
+    { "dot": "cyan", "title": "Main path (v3.6/v3.7)", "items": [
+      "cpht_compare prepares one shared calibration, then trains a selector (and optional value) by BPTT through the learned pH rollout",
+      "Each decision plans 19 periodic-reference coefficients and solves a bounded six-motor QP",
+      "Checkpoints go to runs/.../final.pt; reports to reports/"
+    ] },
+    { "dot": "emerald", "title": "Matched value learning (paper Sec. 4.7, comparison 2)", "items": [
+      "fjbench agents share one backup: ct_sac, interval_euler (Euler step 2.19), ph_sac / ph_direct (App. F)",
+      "The current requested hold is part of the policy input (see the review)"
+    ] },
+    { "dot": "amber", "title": "Reference audit", "items": [
+      "Replays recorded checkpoints with privileged MuJoCo controllers; no training",
+      "Writes validation/mujoco_reference/ and portable transition samples checked to 1e-7"
+    ] },
+    { "dot": "rose", "title": "Not in the code", "items": [
+      "The bilevel lift + energy-shaping controller of (1.10)/(4.26)",
+      "See docs/PAPER_CODE_REVIEW.md"
+    ] }
+  ]
+}

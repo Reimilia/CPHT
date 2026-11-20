@@ -1,0 +1,1027 @@
+{
+  "comparisons": {
+    "state_belief/FtoF/h0.02/fixed/friction_change/cem": {
+      "flags": {
+        "evaluation_budget_censored": 1,
+        "little_forward_progress": 1
+      },
+      "metrics": {
+        "completed_fraction": {
+          "independent_training_seeds": 1,
+          "mean": 0.005107326513905103,
+          "standard_error": null
+        },
+        "decision_seconds": {
+          "independent_training_seeds": 1,
+          "mean": 0.015630549879988395,
+          "standard_error": null
+        },
+        "discounted_return": {
+          "independent_training_seeds": 1,
+          "mean": -1.7461351226925579,
+          "standard_error": null
+        },
+        "physical_seconds": {
+          "independent_training_seeds": 1,
+          "mean": 0.5000000000000002,
+          "standard_error": null
+        },
+        "speed_rmse": {
+          "independent_training_seeds": 1,
+          "mean": 2.799170431678009,
+          "standard_error": null
+        },
+        "success_rate": {
+          "independent_training_seeds": 0,
+          "mean": null,
+          "standard_error": null
+        },
+        "velocity_prediction_l2": {
+          "independent_training_seeds": 1,
+          "mean": 1.4714136785268783,
+          "standard_error": null
+        }
+      },
+      "seeds": {
+        "0": {
+          "completed_fraction": 0.005107326513905103,
+          "decision_seconds": 0.015630549879988395,
+          "discounted_return": -1.7461351226925579,
+          "evaluated_episodes": 1,
+          "flags": {
+            "evaluation_budget_censored": 1,
+            "little_forward_progress": 1
+          },
+          "model_rollout_substeps": 154,
+          "physical_seconds": 0.5000000000000002,
+          "speed_rmse": 2.799170431678009,
+          "success_rate": null,
+          "training_physics_steps": 20,
+          "training_policy_seconds": 0.04,
+          "uncensored_episodes": 0,
+          "velocity_prediction_l2": 1.4714136785268783
+        }
+      }
+    },
+    "state_belief/FtoF/h0.02/fixed/friction_change/selector": {
+      "flags": {
+        "evaluation_budget_censored": 1,
+        "little_forward_progress": 1
+      },
+      "metrics": {
+        "completed_fraction": {
+          "independent_training_seeds": 1,
+          "mean": 0.0025691508622240787,
+          "standard_error": null
+        },
+        "decision_seconds": {
+          "independent_training_seeds": 1,
+          "mean": 0.013448205000040616,
+          "standard_error": null
+        },
+        "discounted_return": {
+          "independent_training_seeds": 1,
+          "mean": -1.8791799856796167,
+          "standard_error": null
+        },
+        "physical_seconds": {
+          "independent_training_seeds": 1,
+          "mean": 0.5000000000000002,
+          "standard_error": null
+        },
+        "speed_rmse": {
+          "independent_training_seeds": 1,
+          "mean": 2.9050559445184985,
+          "standard_error": null
+        },
+        "success_rate": {
+          "independent_training_seeds": 0,
+          "mean": null,
+          "standard_error": null
+        },
+        "velocity_prediction_l2": {
+          "independent_training_seeds": 1,
+          "mean": 1.981489106118679,
+          "standard_error": null
+        }
+      },
+      "seeds": {
+        "0": {
+          "completed_fraction": 0.0025691508622240787,
+          "decision_seconds": 0.013448205000040616,
+          "discounted_return": -1.8791799856796167,
+          "evaluated_episodes": 1,
+          "flags": {
+            "evaluation_budget_censored": 1,
+            "little_forward_progress": 1
+          },
+          "model_rollout_substeps": 50,
+          "physical_seconds": 0.5000000000000002,
+          "speed_rmse": 2.9050559445184985,
+          "success_rate": null,
+          "training_physics_steps": 20,
+          "training_policy_seconds": 0.04,
+          "uncensored_episodes": 0,
+          "velocity_prediction_l2": 1.981489106118679
+        }
+      }
+    },
+    "state_belief/FtoF/h0.02/fixed/friction_change/selector_value": {
+      "flags": {
+        "evaluation_budget_censored": 1,
+        "little_forward_progress": 1
+      },
+      "metrics": {
+        "completed_fraction": {
+          "independent_training_seeds": 1,
+          "mean": 0.0031661077305050996,
+          "standard_error": null
+        },
+        "decision_seconds": {
+          "independent_training_seeds": 1,
+          "mean": 0.01005554975998166,
+          "standard_error": null
+        },
+        "discounted_return": {
+          "independent_training_seeds": 1,
+          "mean": -1.8485259266737275,
+          "standard_error": null
+        },
+        "physical_seconds": {
+          "independent_training_seeds": 1,
+          "mean": 0.5000000000000002,
+          "standard_error": null
+        },
+        "speed_rmse": {
+          "independent_training_seeds": 1,
+          "mean": 2.8808853505907517,
+          "standard_error": null
+        },
+        "success_rate": {
+          "independent_training_seeds": 0,
+          "mean": null,
+          "standard_error": null
+        },
+        "velocity_prediction_l2": {
+          "independent_training_seeds": 1,
+          "mean": 1.9129779066890478,
+          "standard_error": null
+        }
+      },
+      "seeds": {
+        "0": {
+          "completed_fraction": 0.0031661077305050996,
+          "decision_seconds": 0.01005554975998166,
+          "discounted_return": -1.8485259266737275,
+          "evaluated_episodes": 1,
+          "flags": {
+            "evaluation_budget_censored": 1,
+            "little_forward_progress": 1
+          },
+          "model_rollout_substeps": 50,
+          "physical_seconds": 0.5000000000000002,
+          "speed_rmse": 2.8808853505907517,
+          "success_rate": null,
+          "training_physics_steps": 20,
+          "training_policy_seconds": 0.04,
+          "uncensored_episodes": 0,
+          "velocity_prediction_l2": 1.9129779066890478
+        }
+      }
+    },
+    "state_belief/FtoF/h0.02/fixed/friction_change/shooting": {
+      "flags": {
+        "evaluation_budget_censored": 1,
+        "little_forward_progress": 1
+      },
+      "metrics": {
+        "completed_fraction": {
+          "independent_training_seeds": 1,
+          "mean": 0.0030161303018141285,
+          "standard_error": null
+        },
+        "decision_seconds": {
+          "independent_training_seeds": 1,
+          "mean": 0.07109802700000728,
+          "standard_error": null
+        },
+        "discounted_return": {
+          "independent_training_seeds": 1,
+          "mean": -1.8622594778049275,
+          "standard_error": null
+        },
+        "physical_seconds": {
+          "independent_training_seeds": 1,
+          "mean": 0.5000000000000002,
+          "standard_error": null
+        },
+        "speed_rmse": {
+          "independent_training_seeds": 1,
+          "mean": 2.8910506420556312,
+          "standard_error": null
+        },
+        "success_rate": {
+          "independent_training_seeds": 0,
+          "mean": null,
+          "standard_error": null
+        },
+        "velocity_prediction_l2": {
+          "independent_training_seeds": 1,
+          "mean": 2.089138572216034,
+          "standard_error": null
+        }
+      },
+      "seeds": {
+        "0": {
+          "completed_fraction": 0.0030161303018141285,
+          "decision_seconds": 0.07109802700000728,
+          "discounted_return": -1.8622594778049275,
+          "evaluated_episodes": 1,
+          "flags": {
+            "evaluation_budget_censored": 1,
+            "little_forward_progress": 1
+          },
+          "model_rollout_substeps": 180,
+          "physical_seconds": 0.5000000000000002,
+          "speed_rmse": 2.8910506420556312,
+          "success_rate": null,
+          "training_physics_steps": 20,
+          "training_policy_seconds": 0.04,
+          "uncensored_episodes": 0,
+          "velocity_prediction_l2": 2.089138572216034
+        }
+      }
+    },
+    "state_belief/FtoF/h0.02/fixed/nominal/cem": {
+      "flags": {
+        "evaluation_budget_censored": 1,
+        "little_forward_progress": 1
+      },
+      "metrics": {
+        "completed_fraction": {
+          "independent_training_seeds": 1,
+          "mean": 0.003873737751772156,
+          "standard_error": null
+        },
+        "decision_seconds": {
+          "independent_training_seeds": 1,
+          "mean": 0.021019176179943314,
+          "standard_error": null
+        },
+        "discounted_return": {
+          "independent_training_seeds": 1,
+          "mean": -1.8119615035500298,
+          "standard_error": null
+        },
+        "physical_seconds": {
+          "independent_training_seeds": 1,
+          "mean": 0.5000000000000002,
+          "standard_error": null
+        },
+        "speed_rmse": {
+          "independent_training_seeds": 1,
+          "mean": 2.8509820088755378,
+          "standard_error": null
+        },
+        "success_rate": {
+          "independent_training_seeds": 0,
+          "mean": null,
+          "standard_error": null
+        },
+        "velocity_prediction_l2": {
+          "independent_training_seeds": 1,
+          "mean": 1.168855156749487,
+          "standard_error": null
+        }
+      },
+      "seeds": {
+        "0": {
+          "completed_fraction": 0.003873737751772156,
+          "decision_seconds": 0.021019176179943314,
+          "discounted_return": -1.8119615035500298,
+          "evaluated_episodes": 1,
+          "flags": {
+            "evaluation_budget_censored": 1,
+            "little_forward_progress": 1
+          },
+          "model_rollout_substeps": 154,
+          "physical_seconds": 0.5000000000000002,
+          "speed_rmse": 2.8509820088755378,
+          "success_rate": null,
+          "training_physics_steps": 20,
+          "training_policy_seconds": 0.04,
+          "uncensored_episodes": 0,
+          "velocity_prediction_l2": 1.168855156749487
+        }
+      }
+    },
+    "state_belief/FtoF/h0.02/fixed/nominal/selector": {
+      "flags": {
+        "evaluation_budget_censored": 1,
+        "little_forward_progress": 1
+      },
+      "metrics": {
+        "completed_fraction": {
+          "independent_training_seeds": 1,
+          "mean": 0.0035479584611720267,
+          "standard_error": null
+        },
+        "decision_seconds": {
+          "independent_training_seeds": 1,
+          "mean": 0.009949245339976187,
+          "standard_error": null
+        },
+        "discounted_return": {
+          "independent_training_seeds": 1,
+          "mean": -1.825873838101937,
+          "standard_error": null
+        },
+        "physical_seconds": {
+          "independent_training_seeds": 1,
+          "mean": 0.5000000000000002,
+          "standard_error": null
+        },
+        "speed_rmse": {
+          "independent_training_seeds": 1,
+          "mean": 2.8631681612541695,
+          "standard_error": null
+        },
+        "success_rate": {
+          "independent_training_seeds": 0,
+          "mean": null,
+          "standard_error": null
+        },
+        "velocity_prediction_l2": {
+          "independent_training_seeds": 1,
+          "mean": 1.859635189548135,
+          "standard_error": null
+        }
+      },
+      "seeds": {
+        "0": {
+          "completed_fraction": 0.0035479584611720267,
+          "decision_seconds": 0.009949245339976187,
+          "discounted_return": -1.825873838101937,
+          "evaluated_episodes": 1,
+          "flags": {
+            "evaluation_budget_censored": 1,
+            "little_forward_progress": 1
+          },
+          "model_rollout_substeps": 50,
+          "physical_seconds": 0.5000000000000002,
+          "speed_rmse": 2.8631681612541695,
+          "success_rate": null,
+          "training_physics_steps": 20,
+          "training_policy_seconds": 0.04,
+          "uncensored_episodes": 0,
+          "velocity_prediction_l2": 1.859635189548135
+        }
+      }
+    },
+    "state_belief/FtoF/h0.02/fixed/nominal/selector_value": {
+      "flags": {
+        "evaluation_budget_censored": 1,
+        "little_forward_progress": 1
+      },
+      "metrics": {
+        "completed_fraction": {
+          "independent_training_seeds": 1,
+          "mean": 0.0031342468784211707,
+          "standard_error": null
+        },
+        "decision_seconds": {
+          "independent_training_seeds": 1,
+          "mean": 0.009759065440066479,
+          "standard_error": null
+        },
+        "discounted_return": {
+          "independent_training_seeds": 1,
+          "mean": -1.8471745338274037,
+          "standard_error": null
+        },
+        "physical_seconds": {
+          "independent_training_seeds": 1,
+          "mean": 0.5000000000000002,
+          "standard_error": null
+        },
+        "speed_rmse": {
+          "independent_training_seeds": 1,
+          "mean": 2.880064522116751,
+          "standard_error": null
+        },
+        "success_rate": {
+          "independent_training_seeds": 0,
+          "mean": null,
+          "standard_error": null
+        },
+        "velocity_prediction_l2": {
+          "independent_training_seeds": 1,
+          "mean": 1.7862085351347923,
+          "standard_error": null
+        }
+      },
+      "seeds": {
+        "0": {
+          "completed_fraction": 0.0031342468784211707,
+          "decision_seconds": 0.009759065440066479,
+          "discounted_return": -1.8471745338274037,
+          "evaluated_episodes": 1,
+          "flags": {
+            "evaluation_budget_censored": 1,
+            "little_forward_progress": 1
+          },
+          "model_rollout_substeps": 50,
+          "physical_seconds": 0.5000000000000002,
+          "speed_rmse": 2.880064522116751,
+          "success_rate": null,
+          "training_physics_steps": 20,
+          "training_policy_seconds": 0.04,
+          "uncensored_episodes": 0,
+          "velocity_prediction_l2": 1.7862085351347923
+        }
+      }
+    },
+    "state_belief/FtoF/h0.02/fixed/nominal/shooting": {
+      "flags": {
+        "evaluation_budget_censored": 1,
+        "little_forward_progress": 1
+      },
+      "metrics": {
+        "completed_fraction": {
+          "independent_training_seeds": 1,
+          "mean": 0.0006998997507374094,
+          "standard_error": null
+        },
+        "decision_seconds": {
+          "independent_training_seeds": 1,
+          "mean": 0.07361606944003142,
+          "standard_error": null
+        },
+        "discounted_return": {
+          "independent_training_seeds": 1,
+          "mean": -1.968347313939613,
+          "standard_error": null
+        },
+        "physical_seconds": {
+          "independent_training_seeds": 1,
+          "mean": 0.5000000000000002,
+          "standard_error": null
+        },
+        "speed_rmse": {
+          "independent_training_seeds": 1,
+          "mean": 2.974666743617362,
+          "standard_error": null
+        },
+        "success_rate": {
+          "independent_training_seeds": 0,
+          "mean": null,
+          "standard_error": null
+        },
+        "velocity_prediction_l2": {
+          "independent_training_seeds": 1,
+          "mean": 1.5639507146179676,
+          "standard_error": null
+        }
+      },
+      "seeds": {
+        "0": {
+          "completed_fraction": 0.0006998997507374094,
+          "decision_seconds": 0.07361606944003142,
+          "discounted_return": -1.968347313939613,
+          "evaluated_episodes": 1,
+          "flags": {
+            "evaluation_budget_censored": 1,
+            "little_forward_progress": 1
+          },
+          "model_rollout_substeps": 180,
+          "physical_seconds": 0.5000000000000002,
+          "speed_rmse": 2.974666743617362,
+          "success_rate": null,
+          "training_physics_steps": 20,
+          "training_policy_seconds": 0.04,
+          "uncensored_episodes": 0,
+          "velocity_prediction_l2": 1.5639507146179676
+        }
+      }
+    },
+    "state_belief/JtoJ/h0.02/fixed/friction_change/cem": {
+      "flags": {
+        "evaluation_budget_censored": 1,
+        "little_forward_progress": 1
+      },
+      "metrics": {
+        "completed_fraction": {
+          "independent_training_seeds": 1,
+          "mean": 0.0061339340269701715,
+          "standard_error": null
+        },
+        "decision_seconds": {
+          "independent_training_seeds": 1,
+          "mean": 0.03946470782009783,
+          "standard_error": null
+        },
+        "discounted_return": {
+          "independent_training_seeds": 1,
+          "mean": -1.6947967335871272,
+          "standard_error": null
+        },
+        "physical_seconds": {
+          "independent_training_seeds": 1,
+          "mean": 0.5000000000000002,
+          "standard_error": null
+        },
+        "speed_rmse": {
+          "independent_training_seeds": 1,
+          "mean": 2.756677083195142,
+          "standard_error": null
+        },
+        "success_rate": {
+          "independent_training_seeds": 0,
+          "mean": null,
+          "standard_error": null
+        },
+        "velocity_prediction_l2": {
+          "independent_training_seeds": 1,
+          "mean": 1.065879959464073,
+          "standard_error": null
+        }
+      },
+      "seeds": {
+        "0": {
+          "completed_fraction": 0.0061339340269701715,
+          "decision_seconds": 0.03946470782009783,
+          "discounted_return": -1.6947967335871272,
+          "evaluated_episodes": 1,
+          "flags": {
+            "evaluation_budget_censored": 1,
+            "little_forward_progress": 1
+          },
+          "model_rollout_substeps": 154,
+          "physical_seconds": 0.5000000000000002,
+          "speed_rmse": 2.756677083195142,
+          "success_rate": null,
+          "training_physics_steps": 20,
+          "training_policy_seconds": 0.04,
+          "uncensored_episodes": 0,
+          "velocity_prediction_l2": 1.065879959464073
+        }
+      }
+    },
+    "state_belief/JtoJ/h0.02/fixed/friction_change/selector": {
+      "flags": {
+        "evaluation_budget_censored": 1,
+        "little_forward_progress": 1
+      },
+      "metrics": {
+        "completed_fraction": {
+          "independent_training_seeds": 1,
+          "mean": 0.0029150911527362966,
+          "standard_error": null
+        },
+        "decision_seconds": {
+          "independent_training_seeds": 1,
+          "mean": 0.012692270899970026,
+          "standard_error": null
+        },
+        "discounted_return": {
+          "independent_training_seeds": 1,
+          "mean": -1.860152957910917,
+          "standard_error": null
+        },
+        "physical_seconds": {
+          "independent_training_seeds": 1,
+          "mean": 0.5000000000000002,
+          "standard_error": null
+        },
+        "speed_rmse": {
+          "independent_training_seeds": 1,
+          "mean": 2.8903154897526058,
+          "standard_error": null
+        },
+        "success_rate": {
+          "independent_training_seeds": 0,
+          "mean": null,
+          "standard_error": null
+        },
+        "velocity_prediction_l2": {
+          "independent_training_seeds": 1,
+          "mean": 2.021765759587288,
+          "standard_error": null
+        }
+      },
+      "seeds": {
+        "0": {
+          "completed_fraction": 0.0029150911527362966,
+          "decision_seconds": 0.012692270899970026,
+          "discounted_return": -1.860152957910917,
+          "evaluated_episodes": 1,
+          "flags": {
+            "evaluation_budget_censored": 1,
+            "little_forward_progress": 1
+          },
+          "model_rollout_substeps": 50,
+          "physical_seconds": 0.5000000000000002,
+          "speed_rmse": 2.8903154897526058,
+          "success_rate": null,
+          "training_physics_steps": 20,
+          "training_policy_seconds": 0.04,
+          "uncensored_episodes": 0,
+          "velocity_prediction_l2": 2.021765759587288
+        }
+      }
+    },
+    "state_belief/JtoJ/h0.02/fixed/friction_change/selector_value": {
+      "flags": {
+        "evaluation_budget_censored": 1,
+        "little_forward_progress": 1
+      },
+      "metrics": {
+        "completed_fraction": {
+          "independent_training_seeds": 1,
+          "mean": 0.0024748129500702155,
+          "standard_error": null
+        },
+        "decision_seconds": {
+          "independent_training_seeds": 1,
+          "mean": 0.035552627800061604,
+          "standard_error": null
+        },
+        "discounted_return": {
+          "independent_training_seeds": 1,
+          "mean": -1.8754499034486372,
+          "standard_error": null
+        },
+        "physical_seconds": {
+          "independent_training_seeds": 1,
+          "mean": 0.5000000000000002,
+          "standard_error": null
+        },
+        "speed_rmse": {
+          "independent_training_seeds": 1,
+          "mean": 2.9030048857372766,
+          "standard_error": null
+        },
+        "success_rate": {
+          "independent_training_seeds": 0,
+          "mean": null,
+          "standard_error": null
+        },
+        "velocity_prediction_l2": {
+          "independent_training_seeds": 1,
+          "mean": 2.075888755917549,
+          "standard_error": null
+        }
+      },
+      "seeds": {
+        "0": {
+          "completed_fraction": 0.0024748129500702155,
+          "decision_seconds": 0.035552627800061604,
+          "discounted_return": -1.8754499034486372,
+          "evaluated_episodes": 1,
+          "flags": {
+            "evaluation_budget_censored": 1,
+            "little_forward_progress": 1
+          },
+          "model_rollout_substeps": 50,
+          "physical_seconds": 0.5000000000000002,
+          "speed_rmse": 2.9030048857372766,
+          "success_rate": null,
+          "training_physics_steps": 20,
+          "training_policy_seconds": 0.04,
+          "uncensored_episodes": 0,
+          "velocity_prediction_l2": 2.075888755917549
+        }
+      }
+    },
+    "state_belief/JtoJ/h0.02/fixed/friction_change/shooting": {
+      "flags": {
+        "evaluation_budget_censored": 1,
+        "little_forward_progress": 1
+      },
+      "metrics": {
+        "completed_fraction": {
+          "independent_training_seeds": 1,
+          "mean": 0.0017615285931377653,
+          "standard_error": null
+        },
+        "decision_seconds": {
+          "independent_training_seeds": 1,
+          "mean": 0.07026525424011197,
+          "standard_error": null
+        },
+        "discounted_return": {
+          "independent_training_seeds": 1,
+          "mean": -1.9141297534017425,
+          "standard_error": null
+        },
+        "physical_seconds": {
+          "independent_training_seeds": 1,
+          "mean": 0.5000000000000002,
+          "standard_error": null
+        },
+        "speed_rmse": {
+          "independent_training_seeds": 1,
+          "mean": 2.932639528816083,
+          "standard_error": null
+        },
+        "success_rate": {
+          "independent_training_seeds": 0,
+          "mean": null,
+          "standard_error": null
+        },
+        "velocity_prediction_l2": {
+          "independent_training_seeds": 1,
+          "mean": 1.5286144584417343,
+          "standard_error": null
+        }
+      },
+      "seeds": {
+        "0": {
+          "completed_fraction": 0.0017615285931377653,
+          "decision_seconds": 0.07026525424011197,
+          "discounted_return": -1.9141297534017425,
+          "evaluated_episodes": 1,
+          "flags": {
+            "evaluation_budget_censored": 1,
+            "little_forward_progress": 1
+          },
+          "model_rollout_substeps": 180,
+          "physical_seconds": 0.5000000000000002,
+          "speed_rmse": 2.932639528816083,
+          "success_rate": null,
+          "training_physics_steps": 20,
+          "training_policy_seconds": 0.04,
+          "uncensored_episodes": 0,
+          "velocity_prediction_l2": 1.5286144584417343
+        }
+      }
+    },
+    "state_belief/JtoJ/h0.02/fixed/nominal/cem": {
+      "flags": {
+        "evaluation_budget_censored": 1,
+        "large_one_step_model_error": 1,
+        "little_forward_progress": 1
+      },
+      "metrics": {
+        "completed_fraction": {
+          "independent_training_seeds": 1,
+          "mean": 0.00707637697942508,
+          "standard_error": null
+        },
+        "decision_seconds": {
+          "independent_training_seeds": 1,
+          "mean": 0.017073224260057033,
+          "standard_error": null
+        },
+        "discounted_return": {
+          "independent_training_seeds": 1,
+          "mean": -1.6517805177622913,
+          "standard_error": null
+        },
+        "physical_seconds": {
+          "independent_training_seeds": 1,
+          "mean": 0.5000000000000002,
+          "standard_error": null
+        },
+        "speed_rmse": {
+          "independent_training_seeds": 1,
+          "mean": 2.7205789636280566,
+          "standard_error": null
+        },
+        "success_rate": {
+          "independent_training_seeds": 0,
+          "mean": null,
+          "standard_error": null
+        },
+        "velocity_prediction_l2": {
+          "independent_training_seeds": 1,
+          "mean": 1.432985982298851,
+          "standard_error": null
+        }
+      },
+      "seeds": {
+        "0": {
+          "completed_fraction": 0.00707637697942508,
+          "decision_seconds": 0.017073224260057033,
+          "discounted_return": -1.6517805177622913,
+          "evaluated_episodes": 1,
+          "flags": {
+            "evaluation_budget_censored": 1,
+            "large_one_step_model_error": 1,
+            "little_forward_progress": 1
+          },
+          "model_rollout_substeps": 154,
+          "physical_seconds": 0.5000000000000002,
+          "speed_rmse": 2.7205789636280566,
+          "success_rate": null,
+          "training_physics_steps": 20,
+          "training_policy_seconds": 0.04,
+          "uncensored_episodes": 0,
+          "velocity_prediction_l2": 1.432985982298851
+        }
+      }
+    },
+    "state_belief/JtoJ/h0.02/fixed/nominal/selector": {
+      "flags": {
+        "evaluation_budget_censored": 1,
+        "little_forward_progress": 1
+      },
+      "metrics": {
+        "completed_fraction": {
+          "independent_training_seeds": 1,
+          "mean": 0.004258260650171009,
+          "standard_error": null
+        },
+        "decision_seconds": {
+          "independent_training_seeds": 1,
+          "mean": 0.02057792066003458,
+          "standard_error": null
+        },
+        "discounted_return": {
+          "independent_training_seeds": 1,
+          "mean": -1.7921899833842891,
+          "standard_error": null
+        },
+        "physical_seconds": {
+          "independent_training_seeds": 1,
+          "mean": 0.5000000000000002,
+          "standard_error": null
+        },
+        "speed_rmse": {
+          "independent_training_seeds": 1,
+          "mean": 2.836210411926479,
+          "standard_error": null
+        },
+        "success_rate": {
+          "independent_training_seeds": 0,
+          "mean": null,
+          "standard_error": null
+        },
+        "velocity_prediction_l2": {
+          "independent_training_seeds": 1,
+          "mean": 1.875156405866146,
+          "standard_error": null
+        }
+      },
+      "seeds": {
+        "0": {
+          "completed_fraction": 0.004258260650171009,
+          "decision_seconds": 0.02057792066003458,
+          "discounted_return": -1.7921899833842891,
+          "evaluated_episodes": 1,
+          "flags": {
+            "evaluation_budget_censored": 1,
+            "little_forward_progress": 1
+          },
+          "model_rollout_substeps": 50,
+          "physical_seconds": 0.5000000000000002,
+          "speed_rmse": 2.836210411926479,
+          "success_rate": null,
+          "training_physics_steps": 20,
+          "training_policy_seconds": 0.04,
+          "uncensored_episodes": 0,
+          "velocity_prediction_l2": 1.875156405866146
+        }
+      }
+    },
+    "state_belief/JtoJ/h0.02/fixed/nominal/selector_value": {
+      "flags": {
+        "evaluation_budget_censored": 1,
+        "large_one_step_model_error": 1,
+        "little_forward_progress": 1
+      },
+      "metrics": {
+        "completed_fraction": {
+          "independent_training_seeds": 1,
+          "mean": 0.003887498965951422,
+          "standard_error": null
+        },
+        "decision_seconds": {
+          "independent_training_seeds": 1,
+          "mean": 0.014431288720134034,
+          "standard_error": null
+        },
+        "discounted_return": {
+          "independent_training_seeds": 1,
+          "mean": -1.8086490688626868,
+          "standard_error": null
+        },
+        "physical_seconds": {
+          "independent_training_seeds": 1,
+          "mean": 0.5000000000000002,
+          "standard_error": null
+        },
+        "speed_rmse": {
+          "independent_training_seeds": 1,
+          "mean": 2.8498751198581234,
+          "standard_error": null
+        },
+        "success_rate": {
+          "independent_training_seeds": 0,
+          "mean": null,
+          "standard_error": null
+        },
+        "velocity_prediction_l2": {
+          "independent_training_seeds": 1,
+          "mean": 2.2176952826976777,
+          "standard_error": null
+        }
+      },
+      "seeds": {
+        "0": {
+          "completed_fraction": 0.003887498965951422,
+          "decision_seconds": 0.014431288720134034,
+          "discounted_return": -1.8086490688626868,
+          "evaluated_episodes": 1,
+          "flags": {
+            "evaluation_budget_censored": 1,
+            "large_one_step_model_error": 1,
+            "little_forward_progress": 1
+          },
+          "model_rollout_substeps": 50,
+          "physical_seconds": 0.5000000000000002,
+          "speed_rmse": 2.8498751198581234,
+          "success_rate": null,
+          "training_physics_steps": 20,
+          "training_policy_seconds": 0.04,
+          "uncensored_episodes": 0,
+          "velocity_prediction_l2": 2.2176952826976777
+        }
+      }
+    },
+    "state_belief/JtoJ/h0.02/fixed/nominal/shooting": {
+      "flags": {
+        "evaluation_budget_censored": 1,
+        "little_forward_progress": 1
+      },
+      "metrics": {
+        "completed_fraction": {
+          "independent_training_seeds": 1,
+          "mean": 0.0,
+          "standard_error": null
+        },
+        "decision_seconds": {
+          "independent_training_seeds": 1,
+          "mean": 0.06094354076012678,
+          "standard_error": null
+        },
+        "discounted_return": {
+          "independent_training_seeds": 1,
+          "mean": -2.046968567183451,
+          "standard_error": null
+        },
+        "physical_seconds": {
+          "independent_training_seeds": 1,
+          "mean": 0.5000000000000002,
+          "standard_error": null
+        },
+        "speed_rmse": {
+          "independent_training_seeds": 1,
+          "mean": 3.034303053164926,
+          "standard_error": null
+        },
+        "success_rate": {
+          "independent_training_seeds": 0,
+          "mean": null,
+          "standard_error": null
+        },
+        "velocity_prediction_l2": {
+          "independent_training_seeds": 1,
+          "mean": 1.762023028433323,
+          "standard_error": null
+        }
+      },
+      "seeds": {
+        "0": {
+          "completed_fraction": 0.0,
+          "decision_seconds": 0.06094354076012678,
+          "discounted_return": -2.046968567183451,
+          "evaluated_episodes": 1,
+          "flags": {
+            "evaluation_budget_censored": 1,
+            "little_forward_progress": 1
+          },
+          "model_rollout_substeps": 180,
+          "physical_seconds": 0.5000000000000002,
+          "speed_rmse": 3.034303053164926,
+          "success_rate": null,
+          "training_physics_steps": 20,
+          "training_policy_seconds": 0.04,
+          "uncensored_episodes": 0,
+          "velocity_prediction_l2": 1.762023028433323
+        }
+      }
+    }
+  },
+  "full_protocol_executed": false,
+  "gradient_method": "piecewise contact/box-QP derivative through calibrated pH mechanics",
+  "incomplete_seed_groups": [],
+  "interpretation": "Flags include inference limits and numerical diagnostics, separate from task failures",
+  "missing_count": 0,
+  "missing_reports": [],
+  "paired_groups": 4,
+  "report_count": 16,
+  "schema": "cpht_comparison_v1",
+  "smoke_only": true,
+  "statistical_unit": "independent training seed; episodes averaged within seed"
+}

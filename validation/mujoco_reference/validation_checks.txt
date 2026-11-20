@@ -1,0 +1,5 @@
+Initial relevant regression suite: 28 passed in 51.17 s.
+Final new-module suite: 7 passed in 1.87 s (six overlap; one additional native-MPC isolation check).
+Distinct tests: 29.
+All four backend transition audits: passed, tolerance 1e-7.
+Full-course evaluation: 20 episodes, no training/refitting, all timeout.

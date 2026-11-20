@@ -1,0 +1,753 @@
+{
+  "schema": "pure_cpht_preview_v1",
+  "source": "64 calibration decisions and four control decisions; initialized periodic reference; actuation precheck only",
+  "settings": {
+    "schema": "physical_first_v1",
+    "case": "F",
+    "terrain": "terrain",
+    "seed": 0,
+    "total_decisions": 68,
+    "calibration_decisions": 64,
+    "calibration_episode_steps": 16,
+    "nominal_mass_scale": 0.8,
+    "nominal_stiffness_scale": 1.2,
+    "nominal_damping_scale": 1.4,
+    "hidden": [
+      16,
+      16
+    ],
+    "batch": 8,
+    "capacity": 256,
+    "lr": 0.0003,
+    "tau": 0.005,
+    "save_every": 2,
+    "log_every": 1,
+    "pure": {
+      "terrain_probes": true,
+      "horizon_steps": 3,
+      "planning_dt": 0.01,
+      "substeps": 1,
+      "candidates": 8,
+      "elites": 2,
+      "iterations": 1,
+      "replan_seconds": 0.04,
+      "contact_iterations": 6,
+      "max_contacts": 6,
+      "feedback_iterations": 16,
+      "model_refit_every": 2,
+      "model_buffer": 24000,
+      "model_fit_samples": 12000,
+      "mass_ridge": 1e-05,
+      "contact_ridge": 0.01,
+      "feedback_ridge": 0.01,
+      "joint_kp": 60.0,
+      "joint_kd": 12.0,
+      "height_kp": 60.0,
+      "height_kd": 12.0,
+      "pitch_kp": 50.0,
+      "pitch_kd": 10.0,
+      "speed_kd": 3.0,
+      "target_clearance": 0.55,
+      "speed_weight": 4.0,
+      "clearance_weight": 30.0,
+      "pitch_weight": 8.0,
+      "effort_weight": 0.003,
+      "progress_weight": 3.0,
+      "uncertainty_weight": 0.05,
+      "observer_decay": 0.04,
+      "observer_ridge": 0.001,
+      "gait_std": 0.22,
+      "frequency_min": 1.0,
+      "frequency_max": 4.0,
+      "gait_frequency": 2.3,
+      "contact_margin": 0.01,
+      "limit_stiffness": 1600.0,
+      "limit_damping": 20.0
+    }
+  },
+  "control": {
+    "schema": 4,
+    "case": "F",
+    "experiment": "contact",
+    "seed": 0,
+    "task": "cheetah-run",
+    "branch": "Op",
+    "source_sha256": "152162e3633cd634530efb9cc007c7d014cb145a4bbcbdc93b4d141f6d299cbc",
+    "sensor": "native",
+    "position_std": 0.01,
+    "history": 16,
+    "encoder_dim": 32,
+    "use_reward_history": true,
+    "speed_train": [
+      3.0
+    ],
+    "friction_train": [
+      1.0
+    ],
+    "load_train": [
+      0.0
+    ],
+    "speed_validation": [
+      3.0
+    ],
+    "friction_validation": [
+      1.0
+    ],
+    "load_validation": [
+      0.0
+    ],
+    "speed_test": [
+      3.0
+    ],
+    "friction_test": [
+      1.0
+    ],
+    "load_test": [
+      0.0
+    ],
+    "wind_kappa": 1.0,
+    "wind_sigma": 0.0,
+    "wind_test_kappa": 0.5,
+    "wind_test_sigma": 0.7,
+    "wind_force_scale": 3.0,
+    "clock": "irregular",
+    "fixed_hold": 0.01,
+    "physics_dt": 0.002,
+    "min_hold": 0.002,
+    "max_hold": 0.03,
+    "horizon": 12.0,
+    "episode_step_cap": 6000,
+    "reference_time": 0.01,
+    "gamma_reference": 0.9995001249791693,
+    "entropy_convention": "start",
+    "alpha_reference": 0.002,
+    "boundary": "finite_horizon",
+    "total_decisions": 68,
+    "calibration_decisions": 64,
+    "calibration_protocol": "goal_balanced_v2",
+    "path_calibration_goal_episodes": 4,
+    "path_calibration_goal_attempts": 32,
+    "path_calibration_probe_steps": 4,
+    "observer_updates": 2000,
+    "operator_updates": 5000,
+    "batch": 8,
+    "capacity": 300000,
+    "hidden": [
+      400,
+      300
+    ],
+    "lr": 0.0003,
+    "tau": 0.005,
+    "action_samples": 3,
+    "nodes": 96,
+    "ensembles": 1,
+    "kernel_temperature": 0.5,
+    "probe_count": 8,
+    "probe_weight": 1.0,
+    "closure_weight": 0.1,
+    "phase_steps": 3,
+    "sigma": 0.5,
+    "damping": 1.0,
+    "omega": 3.0,
+    "euler_eta": 0.5,
+    "inverse_tolerance": 1e-08,
+    "inverse_relative_tolerance": 1e-12,
+    "inverse_refinement_steps": 2,
+    "residual_tolerance": 0.0001,
+    "momentum_tolerance": 0.0001,
+    "require_solver_tolerance": false,
+    "fit_admission": "empirical",
+    "fit_steps": 4,
+    "fit_relative_tolerance": 0.1,
+    "fit_storage_allowance": 0.25,
+    "log_every": 1000,
+    "save_every": 100000,
+    "model_update": "frozen",
+    "online_model_every": 100,
+    "operator_validation_growth": 0.05,
+    "td3_delay": 2,
+    "td3_exploration": 0.1,
+    "td3_target_noise": 0.2,
+    "td3_noise_clip": 0.5,
+    "contact_backend": "ct_terrain",
+    "contact_profile": "mixed",
+    "contact_sensor": "geometry",
+    "contact_robot_variation": false,
+    "terrain_reference_commit": "297ecbedb1b7510439f85927aa4b70d893f681e8",
+    "terrain_elevation": "hills",
+    "terrain_course_start": -5.0,
+    "terrain_course_length": 200.0,
+    "terrain_patch_length": 4.0,
+    "terrain_resolution": 0.05,
+    "terrain_max_elevation": 1.0,
+    "terrain_start_flat": 3.0,
+    "terrain_ramp_in": 5.0,
+    "terrain_hill_height": 0.3,
+    "terrain_hill_wavelength": 4.0,
+    "terrain_max_grade": 0.25,
+    "terrain_slope_segment": [
+      2.0,
+      8.0
+    ],
+    "terrain_step_height": 0.1,
+    "terrain_step_segment": [
+      1.0,
+      4.0
+    ],
+    "terrain_friction_min": 0.1,
+    "terrain_friction_max": 1.0,
+    "contact_fixed_seed": 1,
+    "contact_train_maps": 32,
+    "contact_validation_maps": 8,
+    "contact_test_maps": 16,
+    "contact_patch_length": 1.0,
+    "contact_patches": 240,
+    "contact_half_width": 1.5,
+    "contact_spawn_positions": [
+      0.0,
+      4.0,
+      8.0,
+      12.0,
+      16.0
+    ],
+    "contact_amplitude_train": [
+      0.08,
+      0.24
+    ],
+    "contact_amplitude_test": [
+      0.3,
+      0.4
+    ],
+    "contact_wavelength_train": [
+      5.0,
+      9.0
+    ],
+    "contact_wavelength_test": [
+      3.5,
+      4.5
+    ],
+    "contact_mu_train": [
+      0.35,
+      1.0
+    ],
+    "contact_mu_test": [
+      0.12,
+      0.25
+    ],
+    "contact_tau_train": [
+      0.02,
+      0.05
+    ],
+    "contact_tau_test": [
+      0.06,
+      0.08
+    ],
+    "contact_zeta_train": [
+      0.8,
+      1.3
+    ],
+    "contact_zeta_test": [
+      0.45,
+      0.65
+    ],
+    "contact_offsets": [
+      -1.0,
+      -0.5,
+      0.0,
+      0.5,
+      1.0,
+      2.0,
+      3.0
+    ],
+    "contact_height_std": 0.005,
+    "contact_slope_std": 0.01,
+    "contact_fall_height": 0.25,
+    "contact_mu_std": 0.03,
+    "contact_tau_std": 0.002,
+    "contact_zeta_std": 0.03,
+    "contact_curriculum": false,
+    "contact_stage_boundaries": [
+      0.0,
+      0.15,
+      0.4
+    ],
+    "contact_stage_levels": [
+      0.35,
+      0.65,
+      1.0
+    ],
+    "contact_calibration_levels": [
+      1.0
+    ],
+    "control_task": "path_speed",
+    "path_target_speed": 3.0,
+    "path_start_x": 0.0,
+    "path_length": 20.0,
+    "path_train_reset_positions": [
+      0.0
+    ],
+    "path_calibration_reset_positions": [
+      0.0,
+      4.0,
+      8.0,
+      12.0,
+      16.0,
+      19.5
+    ],
+    "path_calibration_velocity_scales": [
+      0.0,
+      0.5,
+      1.0
+    ],
+    "path_speed_weight": 4.0,
+    "path_effort_weight": 0.01,
+    "path_time_weight": 0.05,
+    "path_backwards_weight": 0.1,
+    "path_goal_bonus": 5.0,
+    "path_failure_penalty": 2.0,
+    "path_speed_band": 0.1,
+    "path_odometry_std": 0.01,
+    "path_fall_clearance": 0.2,
+    "path_fall_pitch": 1.5,
+    "path_trace_dt": 0.05
+  },
+  "pure_model": {
+    "geometry": {
+      "armature": [
+        0.08000000000000002,
+        0.08000000000000002,
+        0.08000000000000002,
+        0.08000000000000002,
+        0.08000000000000002,
+        0.08000000000000002
+      ],
+      "com": [
+        [
+          0.0,
+          0.0
+        ],
+        [
+          0.15238987816307403,
+          0.025398313027179008
+        ],
+        [
+          0.1,
+          -0.13
+        ],
+        [
+          -0.14,
+          -0.07
+        ],
+        [
+          0.03,
+          -0.097
+        ],
+        [
+          -0.07,
+          -0.12
+        ],
+        [
+          0.065,
+          -0.09
+        ],
+        [
+          0.045,
+          -0.07
+        ]
+      ],
+      "damping": [
+        8.399999999999999,
+        6.3,
+        4.199999999999999,
+        6.3,
+        4.199999999999999,
+        2.0999999999999996
+      ],
+      "gears": [
+        120.0,
+        90.0,
+        60.0,
+        90.0,
+        60.0,
+        30.0
+      ],
+      "gravity": [
+        0.0,
+        -9.81
+      ],
+      "inertias": [
+        0.7176941504893987,
+        0.013475471665271965,
+        0.014613935263598325,
+        0.005081938610878662,
+        0.010991714677824274,
+        0.006577686895397489,
+        0.002823287564853557
+      ],
+      "joint": [
+        -1,
+        0,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "limits": [
+        [
+          -0.5235987755982988,
+          1.0471975511965976
+        ],
+        [
+          -0.8726646259971648,
+          0.8726646259971648
+        ],
+        [
+          -4.014257279586958,
+          0.8726646259971648
+        ],
+        [
+          -0.9948376736367679,
+          0.006981317007977318
+        ],
+        [
+          -1.2217304763960306,
+          0.8726646259971648
+        ],
+        [
+          -0.4886921905584123,
+          0.4886921905584123
+        ]
+      ],
+      "masses": [
+        5.000167364016736,
+        1.2348117154811717,
+        1.2699581589958158,
+        0.8763179916317994,
+        1.1504602510460253,
+        0.9606694560669458,
+        0.7076150627615063
+      ],
+      "parents": [
+        0,
+        0,
+        1,
+        2,
+        3,
+        1,
+        5,
+        6
+      ],
+      "points": [
+        {
+          "body": 1,
+          "local": [
+            0.5,
+            -1.1102230246251565e-16
+          ],
+          "radius": 0.046
+        },
+        {
+          "body": 1,
+          "local": [
+            -0.5,
+            1.1102230246251565e-16
+          ],
+          "radius": 0.046
+        },
+        {
+          "body": 1,
+          "local": [
+            0.4850933335321533,
+            0.0035818585470191178
+          ],
+          "radius": 0.046
+        },
+        {
+          "body": 1,
+          "local": [
+            0.7149066664678467,
+            0.1964181414529809
+          ],
+          "radius": 0.046
+        },
+        {
+          "body": 2,
+          "local": [
+            0.010729086077779629,
+            -0.015738440727025307
+          ],
+          "radius": 0.046
+        },
+        {
+          "body": 2,
+          "local": [
+            0.1892709139222204,
+            -0.24426155927297472
+          ],
+          "radius": 0.046
+        },
+        {
+          "body": 3,
+          "local": [
+            -0.00518089305512498,
+            -0.004244327981638388
+          ],
+          "radius": 0.046
+        },
+        {
+          "body": 3,
+          "local": [
+            -0.27481910694487505,
+            -0.13575567201836164
+          ],
+          "radius": 0.046
+        },
+        {
+          "body": 4,
+          "local": [
+            0.05432899023963695,
+            -0.1877970276711724
+          ],
+          "radius": 0.046
+        },
+        {
+          "body": 4,
+          "local": [
+            0.005671009760363048,
+            -0.006202972328827591
+          ],
+          "radius": 0.046
+        },
+        {
+          "body": 5,
+          "local": [
+            -0.1365,
+            -0.23518137870333033
+          ],
+          "radius": 0.046
+        },
+        {
+          "body": 5,
+          "local": [
+            -0.003500000000000017,
+            -0.004818621296669642
+          ],
+          "radius": 0.046
+        },
+        {
+          "body": 6,
+          "local": [
+            0.12427444776789917,
+            -0.17787798269083444
+          ],
+          "radius": 0.046
+        },
+        {
+          "body": 6,
+          "local": [
+            0.00572555223210084,
+            -0.002122017309165572
+          ],
+          "radius": 0.046
+        },
+        {
+          "body": 7,
+          "local": [
+            0.08414350324295228,
+            -0.12803263007885293
+          ],
+          "radius": 0.046
+        },
+        {
+          "body": 7,
+          "local": [
+            0.005856496757047719,
+            -0.01196736992114708
+          ],
+          "radius": 0.046
+        }
+      ],
+      "positions": [
+        [
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.7
+        ],
+        [
+          -0.5,
+          0.0
+        ],
+        [
+          0.16,
+          -0.25
+        ],
+        [
+          -0.28,
+          -0.14
+        ],
+        [
+          0.5,
+          0.0
+        ],
+        [
+          -0.14,
+          -0.24
+        ],
+        [
+          0.13,
+          -0.18
+        ]
+      ],
+      "spring_reference": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "stiffness": [
+        288.0,
+        216.0,
+        144.0,
+        216.0,
+        144.0,
+        72.0
+      ],
+      "xml_sha256": "47e3152e1213d6895ef36b36bbd399f1c7e0edf7d39f05675cd72bc5fbc14faa"
+    },
+    "parameters": [
+      6.250209205020865,
+      1.5435146443514625,
+      1.5874476987447776,
+      1.0953974895397527,
+      1.4380753138075226,
+      1.2008368200836859,
+      0.8845188284518802,
+      0.8971176881117481,
+      0.016844339581589925,
+      0.018267419079497884,
+      0.006352423263598333,
+      0.013739643347280277,
+      0.008222108619247175,
+      0.00352910945606698,
+      0.10000000000000006,
+      0.09999999999999985,
+      0.0999999999999998,
+      0.09999999999999966,
+      0.09999999999999981,
+      0.09999999999999971,
+      240.00000000000026,
+      180.00000000000017,
+      119.99999999999993,
+      179.9999999999992,
+      120.00000000000031,
+      60.00000000000008,
+      6.000000000000009,
+      4.499999999999994,
+      3.0000000000000075,
+      4.500000000000014,
+      2.999999999999999,
+      1.5000000000000056
+    ],
+    "contact": [
+      3943.360392928815,
+      101.36797160405857,
+      0.0008000000000013986,
+      0.6829522217590206
+    ]
+  },
+  "neutral": [
+    -0.016340531408786774,
+    -0.018531566485762596,
+    -0.0673617273569107,
+    -0.03587307035923004,
+    -0.1096532791852951,
+    -0.1268111914396286
+  ],
+  "gait": [
+    0.04698564112186432,
+    -0.06653096526861191,
+    -0.13318923115730286,
+    -0.20019903779029846,
+    -0.18752506375312805,
+    -0.0813019797205925,
+    0.5394558310508728,
+    0.17479531466960907,
+    -0.030140623450279236,
+    -1.0,
+    -0.041336700320243835,
+    0.023643795400857925,
+    0.36056995391845703,
+    0.45571982860565186,
+    -0.5476365089416504,
+    -0.006780557334423065,
+    -0.29820236563682556,
+    0.017502587288618088,
+    2.0915071964263916
+  ],
+  "model_metrics": {
+    "mechanics": {
+      "train": {
+        "force_rmse": 8.980062331552977e-13,
+        "relative_force_rmse": 9.178914716169621e-15,
+        "prior_force_rmse": 5.575994311301833e-13,
+        "power_rmse": 9.59021934651822e-13,
+        "samples": 125
+      },
+      "validation": {
+        "force_rmse": 8.391926846238972e-12,
+        "relative_force_rmse": 1.0337821578420525e-13,
+        "prior_force_rmse": 8.433229049634255e-12,
+        "power_rmse": 9.453683526841422e-12,
+        "samples": 35
+      },
+      "design_rank": 32,
+      "parameters": 32,
+      "regularized_identification": true,
+      "parameter_identifiability": "Only identifiable combinations are data-determined; ridge selects remaining coefficients near the positive prior"
+    },
+    "contact": {
+      "calibrated": true,
+      "training_contacts": 148,
+      "validation_contacts": 25,
+      "normal_reference_validation_rmse": 24.96378505184863,
+      "friction_from_sliding_samples": 73,
+      "parameter_names": [
+        "normal_stiffness",
+        "normal_damping",
+        "impedance_ratio",
+        "friction"
+      ],
+      "approximation": "Finite-iteration unilateral Coulomb-cone contact QP with measured local terrain; separate from the MuJoCo solver",
+      "candidate_admitted": true,
+      "candidate_port_rmse": 62.29289600004265,
+      "port_validation_rmse": 62.29289600004265,
+      "port_validation_relative_rmse": 0.8377168997271563,
+      "qp_projected_residual": 2.1572576737867166,
+      "validation_samples": 35
+    }
+  },
+  "training_counters": {
+    "decisions": 68,
+    "policy_decisions": 4,
+    "policy_physics_steps": 4,
+    "updates": 2,
+    "model_updates": 2,
+    "model_refit_attempts": 2,
+    "actor_updates": 0,
+    "critic_updates": 0,
+    "control_optimizations": 2,
+    "predictive_substeps": 48,
+    "linear_value_solves": 0,
+    "policy_force_sensor_solves": 9
+  }
+}

@@ -1,0 +1,10 @@
+# Headless simulator/video checks only. Training requirements remain separate.
+# Smoke-tested with these versions. EGL needs a working system GL implementation.
+numpy==2.3.5
+mujoco==3.17.0
+dm-control==1.0.50
+gymnasium==1.4.0
+imageio==2.38.1
+imageio-ffmpeg==0.6.0
+matplotlib>=3.9
+Pillow>=11

@@ -1,0 +1,25 @@
+{
+  "repository": "https://github.com/CuboiLeo/SuperMimic-Reproduced",
+  "commit": "ba6105349069bf040f1fdad60873d13138d505a2",
+  "relationship": "Independent unofficial reproduction. No official repository was linked on the authors' project page when checked.",
+  "inspected_paths": [
+    "src/supermimic/imagination/objective.py",
+    "src/supermimic/imagination/policy_trainer.py",
+    "src/supermimic/imagination/rollout.py",
+    "src/supermimic/world_model/wm_trainer.py"
+  ],
+  "adapted_patterns": [
+    "frozen-model BPTT",
+    "survival-weighted return",
+    "terminal task value and detached TD(lambda) labels"
+  ],
+  "differences": [
+    "calibrated pH/contact model",
+    "19-parameter motion references and bounded feedback",
+    "physical-time discounts",
+    "causal local environment estimate",
+    "shared frozen model for the ablation"
+  ],
+  "license": "MIT",
+  "date_inspected": "2026-11-04"
+}

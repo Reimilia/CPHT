@@ -1,0 +1,71 @@
+{
+  "source": "supplied sensor.zip",
+  "runs": [
+    {
+      "path": "F/terrain/ct_sac/seed0_e9cc420cb031/run.json",
+      "sensing_mode": "state",
+      "external_geometry_sensor": false,
+      "checkpoint_present": false,
+      "completed_training_episodes": 46,
+      "recent_completed_training_episodes": 20,
+      "recent_terminal_counts": {
+        "goal": 0,
+        "fall": 6,
+        "timeout": 14
+      },
+      "recent_mean_completed_fraction": 0.43186167887861426,
+      "interpretation": "recent completed training episodes; not independent frozen-policy evaluation"
+    },
+    {
+      "path": "F/terrain/pure_cpht/seed0_e9cc420cb031/run.json",
+      "sensing_mode": "state",
+      "external_geometry_sensor": false,
+      "checkpoint_present": true,
+      "completed_training_episodes": 41,
+      "recent_completed_training_episodes": 20,
+      "recent_terminal_counts": {
+        "goal": 0,
+        "fall": 2,
+        "timeout": 18
+      },
+      "recent_mean_completed_fraction": 0.6258397123582246,
+      "interpretation": "recent completed training episodes; not independent frozen-policy evaluation"
+    },
+    {
+      "path": "J/terrain/ct_sac/seed0_cf672d928c0e/run.json",
+      "sensing_mode": "state",
+      "external_geometry_sensor": false,
+      "checkpoint_present": false,
+      "completed_training_episodes": 40,
+      "recent_completed_training_episodes": 20,
+      "recent_terminal_counts": {
+        "goal": 0,
+        "fall": 2,
+        "timeout": 18
+      },
+      "recent_mean_completed_fraction": 0.4414673591337154,
+      "interpretation": "recent completed training episodes; not independent frozen-policy evaluation"
+    },
+    {
+      "path": "J/terrain/pure_cpht/seed0_cf672d928c0e/run.json",
+      "sensing_mode": "state",
+      "external_geometry_sensor": false,
+      "checkpoint_present": true,
+      "completed_training_episodes": 42,
+      "recent_completed_training_episodes": 20,
+      "recent_terminal_counts": {
+        "goal": 0,
+        "fall": 1,
+        "timeout": 19
+      },
+      "recent_mean_completed_fraction": 0.6070412179707829,
+      "interpretation": "recent completed training episodes; not independent frozen-policy evaluation",
+      "refit_failure": {
+        "admitted": false,
+        "decisions": 13824,
+        "reason": "Pure dynamics learning needs disjoint episode folds"
+      }
+    }
+  ],
+  "ct_sac_checkpoints": []
+}

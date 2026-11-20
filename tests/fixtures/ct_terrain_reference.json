@@ -1,0 +1,50 @@
+{
+  "source": {
+    "repository": "sebale16/ct-rl",
+    "branch": "cheetah-terrain",
+    "commit": "297ecbedb1b7510439f85927aa4b70d893f681e8",
+    "path": "environment/cheetah_terrain.py",
+    "git_blob_sha": "e95e50779d6389d2f1bc19b5f10f7fd8a518efec",
+    "scope": "Physical course construction and stock robot/contact settings. Current measurements and finite path/speed task retained."
+  },
+  "generator": "verify_terrain_match.py --write-fixtures tests/fixtures/ct_terrain_reference.npz",
+  "seeds": [
+    1,
+    7
+  ],
+  "variants": [
+    "hills",
+    "friction",
+    "terrain",
+    "slopes",
+    "steps"
+  ],
+  "fixture_sha256": "7b3d141b08002a50644f83b3365ca39d100a98a42789baca3e31cad17e1a501a",
+  "model_fields": [
+    "actuator_gear",
+    "body_inertia",
+    "body_mass",
+    "dof_damping",
+    "geom_conaffinity",
+    "geom_condim",
+    "geom_contype",
+    "geom_friction",
+    "geom_pos",
+    "geom_priority",
+    "geom_rgba",
+    "geom_size",
+    "geom_solimp",
+    "geom_solref",
+    "geom_type",
+    "gravity",
+    "hfield_data",
+    "hfield_ncol",
+    "hfield_nrow",
+    "hfield_size",
+    "mu",
+    "patch_edges",
+    "x",
+    "z"
+  ],
+  "generated_from_pinned_upstream_module": true
+}

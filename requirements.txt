@@ -1,0 +1,17 @@
+# Python 3.11 or 3.12. Install a Torch wheel that fits the server's CUDA driver.
+torch==2.14.1
+numpy==2.3.5
+scipy==1.17.0
+mujoco==3.17.0
+dm-control==1.0.50
+gymnasium==1.4.0
+stable-baselines3==2.9.0
+sb3-contrib==2.9.0
+pandas
+matplotlib
+cloudpickle
+tensorboard
+tqdm
+imageio
+imageio-ffmpeg==0.6.0
+opencv-python-headless
