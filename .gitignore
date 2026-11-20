@@ -8,3 +8,6 @@ plans/
 *.egg-info/
 .DS_Store
 reports/
+docs/architecture/*.finalize*.json
+docs/architecture/*.browser-check.json
+docs/architecture/*.delivery.json
