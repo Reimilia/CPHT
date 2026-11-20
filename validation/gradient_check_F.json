@@ -1,0 +1,43 @@
+{
+  "best_relative_error": 7.938765178032724e-09,
+  "directions": [
+    {
+      "absolute_error": 1.4369756469803652e-12,
+      "analytic": 0.00018100744931325008,
+      "epsilon": 0.001,
+      "finite_difference": 0.00018100745075022573,
+      "relative_error": 7.938765178032724e-09
+    },
+    {
+      "absolute_error": 5.059078291924993e-12,
+      "analytic": 0.00018100744931325008,
+      "epsilon": 0.0003,
+      "finite_difference": 0.00018100745437232837,
+      "relative_error": 2.794955771002988e-08
+    },
+    {
+      "absolute_error": 3.3230987514683286e-11,
+      "analytic": 0.00018100744931325008,
+      "epsilon": 0.0001,
+      "finite_difference": 0.0001810074825442376,
+      "relative_error": 1.8358902652856768e-07
+    },
+    {
+      "absolute_error": 1.8959995709945734e-11,
+      "analytic": 0.00018100744931325008,
+      "epsilon": 3e-05,
+      "finite_difference": 0.0001810074682732458,
+      "relative_error": 1.0474703552741839e-07
+    }
+  ],
+  "finite_gradient": true,
+  "gradient_norm": 0.005970895121052834,
+  "interpretation": "Piecewise derivative; a branch change can invalidate a centered comparison",
+  "job": {
+    "case": "F",
+    "horizon": 0.02,
+    "method": "cem",
+    "mode": "state_belief",
+    "seed": 0
+  }
+}

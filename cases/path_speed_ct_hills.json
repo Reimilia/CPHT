@@ -1,0 +1,7 @@
+{
+  "control_task": "path_speed",
+  "contact_backend": "ct_terrain",
+  "contact_fixed_seed": 1,
+  "contact_profile": "elevation",
+  "terrain_elevation": "hills"
+}

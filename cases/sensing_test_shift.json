@@ -1,0 +1,8 @@
+{
+  "sensor_delay": 0.06,
+  "sensor_dropout": 0.2,
+  "friction_events": [
+    {"time": 3.0, "scale": 0.3},
+    {"time": 7.0, "scale": 0.8}
+  ]
+}

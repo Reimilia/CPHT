@@ -1,0 +1,50 @@
+{
+  "source_archive_sha256": "f200cc0bbb46a89d23b1b0beeb7390542a9489debef6b064ee61b0d455a3a77a",
+  "revised_existing_source_files": [
+    "pure_cpht/contact.py"
+  ],
+  "revised_docs": [
+    "README.md"
+  ],
+  "legacy_source_files_removed": [],
+  "included_files": 218,
+  "excluded_generated_files": 504,
+  "excluded_groups": [
+    "old generated plans",
+    "old generated prechecks except model fixture",
+    "new local runs/artifacts",
+    "vendor extracted cache",
+    "Python caches"
+  ],
+  "new_modules": [
+    "cpht_compare/__init__.py",
+    "cpht_compare/__main__.py",
+    "cpht_compare/config.py",
+    "cpht_compare/controller.py",
+    "cpht_compare/learning.py",
+    "cpht_compare/networks.py",
+    "cpht_compare/pipeline.py",
+    "cpht_compare/report.py",
+    "cpht_compare/rollout.py"
+  ],
+  "source_files": 112,
+  "legacy_experiments_preserved": true,
+  "reference_extension_v3_7": {
+    "added": [
+      "mujoco_reference/",
+      "scripts/run_mujoco_reference.sh",
+      "MUJOCO_REFERENCE.md",
+      "VALIDATION_v3_7.md",
+      "tests/test_mujoco_reference.py",
+      "validation/mujoco_reference/",
+      "validation/reference_samples/"
+    ],
+    "excluded_generated_caches": [
+      "__pycache__",
+      ".pytest_cache",
+      "vendor/extracted"
+    ],
+    "original_training_results_modified": false,
+    "duplicate_backend_snapshots_shared": true
+  }
+}

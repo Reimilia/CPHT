@@ -1,0 +1,5 @@
+# Install into the existing training/evaluation environment. Keep its Torch,
+# MuJoCo, and dm-control versions to reproduce the original checkpoint replay.
+imageio>=2.31
+imageio-ffmpeg>=0.5
+Pillow>=10

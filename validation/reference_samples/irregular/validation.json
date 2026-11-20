@@ -1,0 +1,54 @@
+[
+  {
+    "case": "F",
+    "checks": {
+      "planning_left_live_state_unchanged": true,
+      "replay_q_max_abs": 0.0,
+      "replay_v_max_abs": 0.0,
+      "learned_q_l2": 0.0006113621984388186,
+      "learned_v_l2": 0.30567646734713266,
+      "learned_v_translational_l2_m_per_s": 0.018316063893207196,
+      "learned_v_angular_l2_rad_per_s": 0.3051272267321987,
+      "truth_environment_learned_v_translational_l2_m_per_s": 0.01843650754205893,
+      "truth_environment_learned_v_angular_l2_rad_per_s": 0.30882143687013724,
+      "force_balance_inf": 6.252776074688882e-13,
+      "euler_velocity_defect_inf": 9.992007221626409e-16,
+      "euler_position_defect_inf": 0.0
+    },
+    "standalone_validation": {
+      "passed": true,
+      "tolerance": 1e-07,
+      "replay_q_max_abs": 0.0,
+      "replay_v_max_abs": 0.0,
+      "force_balance_inf": 6.252776074688882e-13,
+      "actual_hold_seconds": 0.002,
+      "physics_substeps": 1
+    }
+  },
+  {
+    "case": "J",
+    "checks": {
+      "planning_left_live_state_unchanged": true,
+      "replay_q_max_abs": 0.0,
+      "replay_v_max_abs": 0.0,
+      "learned_q_l2": 3.7538907809904505e-05,
+      "learned_v_l2": 0.018760588953999697,
+      "learned_v_translational_l2_m_per_s": 0.0003556225148449379,
+      "learned_v_angular_l2_rad_per_s": 0.018757218091387404,
+      "truth_environment_learned_v_translational_l2_m_per_s": 0.00015695067145500593,
+      "truth_environment_learned_v_angular_l2_rad_per_s": 0.007067066803159488,
+      "force_balance_inf": 6.124878382252064e-12,
+      "euler_velocity_defect_inf": 4.9960036108132044e-15,
+      "euler_position_defect_inf": 1.3877787807814457e-17
+    },
+    "standalone_validation": {
+      "passed": true,
+      "tolerance": 1e-07,
+      "replay_q_max_abs": 0.0,
+      "replay_v_max_abs": 0.0,
+      "force_balance_inf": 6.124878382252064e-12,
+      "actual_hold_seconds": 0.002,
+      "physics_substeps": 1
+    }
+  }
+]

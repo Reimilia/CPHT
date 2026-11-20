@@ -1,0 +1,28 @@
+{
+  "schema": "cpht_comparison_v1",
+  "cases": [
+    "F",
+    "J"
+  ],
+  "seeds": [
+    0,
+    1,
+    2
+  ],
+  "information_modes": [
+    "state_belief",
+    "sensed_belief"
+  ],
+  "methods": [
+    "cem",
+    "shooting",
+    "selector",
+    "selector_value"
+  ],
+  "horizons_seconds": [
+    0.2,
+    0.4,
+    0.6
+  ]
+}
+

@@ -1,0 +1,9 @@
+{
+  "mujoco_reference/controller.py": "a7d678e7569a676f403ab32ec0c1698be56d2fa516783fec62a2794fe7a95042",
+  "mujoco_reference/__init__.py": "82430925773d3592f5cb05ff53f6268aad900bd6a72d0abb6596add576b2acab",
+  "mujoco_reference/transition.py": "4edce69375c4b68560759ce8b1a8bf051b88e43c3d1b5dd565a3f74882779f6b",
+  "mujoco_reference/pipeline.py": "3f47c1daddf3e02c22af46408ff5255082c446d739dfef7144b546e25626fc28",
+  "mujoco_reference/common.py": "91d294f386d99b2ab8be1e785df474b342957d000e55ce89641becacc073afe9",
+  "mujoco_reference/__main__.py": "75ffbfbfeccfd1ea336fb962ed3cc44afb714dec80e57587e016986cbbb09ef2",
+  "scripts/run_mujoco_reference.sh": "5c46959de977b0735a76b31227eadea0ed56a3f5b4f95d9b330c7f786dd03a46"
+}

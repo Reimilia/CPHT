@@ -1,0 +1,6 @@
+{
+  "total_decisions": 100000,
+  "calibration_decisions": 4096,
+  "calibration_episode_steps": 32,
+  "pure": {}
+}

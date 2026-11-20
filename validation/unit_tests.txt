@@ -1,0 +1,26 @@
+test_plan_is_dry_and_has_four_methods_and_shared_calibrations (tests.test_cpht_comparison.ConfigurationTests.test_plan_is_dry_and_has_four_methods_and_shared_calibrations) ... ok
+test_report_censors_incomplete_course_and_rejects_unpaired_truth (tests.test_cpht_comparison.ConfigurationTests.test_report_censors_incomplete_course_and_rejects_unpaired_truth) ... ok
+test_rollout_directional_gradient_and_model_frozen (tests.test_cpht_comparison.DifferentiableTests.test_rollout_directional_gradient_and_model_frozen) ... ok
+test_selector_and_value_updates_preserve_model_and_use_no_simulator (tests.test_cpht_comparison.DifferentiableTests.test_selector_and_value_updates_preserve_model_and_use_no_simulator) ... ok
+test_snapshot_ignores_audit_truth_and_scalar_mu_stays_causal (tests.test_cpht_comparison.DifferentiableTests.test_snapshot_ignores_audit_truth_and_scalar_mu_stays_causal) ... ok
+test_td_lambda_uses_real_interval_discounts_and_stops_at_terminal (tests.test_cpht_comparison.DifferentiableTests.test_td_lambda_uses_real_interval_discounts_and_stops_at_terminal) ... ok
+test_variable_hold_and_actual_six_input_bounds (tests.test_cpht_comparison.DifferentiableTests.test_variable_hold_and_actual_six_input_bounds) ... ok
+test_acceleration_equations_equal_canonical_ph_and_allow_motor_work (tests.test_pure_cpht.PureMechanicsTests.test_acceleration_equations_equal_canonical_ph_and_allow_motor_work) ... WARNING:absl:compiler attribute 'settotalmass' is deprecated and will be removed in a future release: scale the masses and densities in the model, or call mj_setTotalmass and mj_setConst on the compiled model
+ok
+test_bounded_feedback_optimizer_matches_independent_scipy (tests.test_pure_cpht.PureMechanicsTests.test_bounded_feedback_optimizer_matches_independent_scipy) ... WARNING:absl:compiler attribute 'settotalmass' is deprecated and will be removed in a future release: scale the masses and densities in the model, or call mj_setTotalmass and mj_setConst on the compiled model
+ok
+test_contact_cones_airborne_port_and_causal_force_observer (tests.test_pure_cpht.PureMechanicsTests.test_contact_cones_airborne_port_and_causal_force_observer) ... WARNING:absl:compiler attribute 'settotalmass' is deprecated and will be removed in a future release: scale the masses and densities in the model, or call mj_setTotalmass and mj_setConst on the compiled model
+ok
+test_learns_link_perturbations_beyond_the_three_global_scales (tests.test_pure_cpht.PureMechanicsTests.test_learns_link_perturbations_beyond_the_three_global_scales) ... WARNING:absl:compiler attribute 'settotalmass' is deprecated and will be removed in a future release: scale the masses and densities in the model, or call mj_setTotalmass and mj_setConst on the compiled model
+ok
+test_mass_bias_energy_and_regression_match_independent_mujoco (tests.test_pure_cpht.PureMechanicsTests.test_mass_bias_energy_and_regression_match_independent_mujoco) ... WARNING:absl:compiler attribute 'settotalmass' is deprecated and will be removed in a future release: scale the masses and densities in the model, or call mj_setTotalmass and mj_setConst on the compiled model
+ok
+test_legacy_identity_and_explicit_new_modes (tests.test_environment_belief.ContractTests.test_legacy_identity_and_explicit_new_modes) ... ok
+test_friction_requires_loaded_dissipative_sliding_and_retains_uncertainty (tests.test_environment_belief.ObserverTests.test_friction_requires_loaded_dissipative_sliding_and_retains_uncertainty) ... ok
+test_numpy_point_jacobian_matches_independent_mujoco (tests.test_environment_belief.ObserverTests.test_numpy_point_jacobian_matches_independent_mujoco) ... ok
+test_quadratic_recovery_curvature_transport_and_age (tests.test_environment_belief.ObserverTests.test_quadratic_recovery_curvature_transport_and_age) ... ok
+
+----------------------------------------------------------------------
+Ran 16 tests in 8.387s
+
+OK

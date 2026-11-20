@@ -1,0 +1,10 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+artifacts/
+runs/
+vendor/extracted/
+plans/
+*.egg-info/
+.DS_Store
+reports/

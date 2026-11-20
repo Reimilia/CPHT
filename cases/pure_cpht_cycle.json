@@ -1,0 +1,15 @@
+{
+  "total_decisions": 30000,
+  "calibration_decisions": 4096,
+  "calibration_episode_steps": 32,
+  "save_every": 2500,
+  "log_every": 100,
+  "pure": {
+    "horizon_steps": 50,
+    "planning_dt": 0.01,
+    "candidates": 64,
+    "elites": 8,
+    "iterations": 3,
+    "replan_seconds": 0.08
+  }
+}

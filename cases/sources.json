@@ -1,0 +1,44 @@
+{
+  "manuscript": {
+    "name": "CPHT_TPHT_Information_Operator_v8.pdf",
+    "sha256": "295df7f8c192ba415446e3832255faf77f47c3166543d6d6e31ecf64c0f560e6",
+    "sections": [
+      "4.5",
+      "4.6",
+      "Appendix C"
+    ]
+  },
+  "measurement_note": {
+    "name": "SDE_measurements_and_verified_learning.pdf",
+    "sha256": "c039cb41a2083c50a83e873e0954739f19d1a7bd9ac28a697456eaa688fcaeb0",
+    "library_version": "3",
+    "sections": [
+      "7.1",
+      "7.3",
+      "7.5",
+      "Algorithms 3 and 4",
+      "7.7",
+      "7.8"
+    ]
+  },
+  "contact_extension": {
+    "filename": "SDE_measurements_and_verified_learning.pdf",
+    "sha256": "0328e81f4a42d9acaa325745875e759257a1d53ba8a24e82ef9f467a46c03e09",
+    "sections": [
+      "7.1, Algorithms 3 and 4",
+      "A.4 environmental measurements",
+      "C.1 elevation",
+      "C.2 materials",
+      "C.3 generalized contact forces"
+    ],
+    "scope": "Contact extension follows the attached revision. Existing v2 wind, payload, and grid presets are retained. Synthetic terrain and material ranges are new benchmark choices."
+  },
+  "ct_terrain_reference": {
+    "repository": "sebale16/ct-rl",
+    "branch": "cheetah-terrain",
+    "commit": "297ecbedb1b7510439f85927aa4b70d893f681e8",
+    "path": "environment/cheetah_terrain.py",
+    "git_blob_sha": "e95e50779d6389d2f1bc19b5f10f7fd8a518efec",
+    "scope": "Physical course construction and stock robot/contact settings. Current measurements and finite path/speed task retained."
+  }
+}
