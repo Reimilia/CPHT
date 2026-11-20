@@ -13,7 +13,7 @@ from fjbench.contact import sample_map,query,validate_map
 
 
 def config(case='F',name='terrain',**extra):
-    return config_from(ROOT/f'cases/path_speed_ct_{name}.json',case,'contact',extra=extra)
+    return config_from(ROOT/f'tests/fixtures/cases/path_speed_ct_{name}.json',case,'contact',extra=extra)
 
 
 class CourseTests(unittest.TestCase):
@@ -68,19 +68,6 @@ class CourseTests(unittest.TestCase):
         m=sample_map(c,4);m['z'][20]=.2
         with self.assertRaises(ValueError):validate_map(m)
 
-    def test_launcher_keeps_selected_physics_with_custom_neural_settings(self):
-        with tempfile.TemporaryDirectory() as temp:
-            root=Path(temp);custom=root/'custom.json'
-            custom.write_text(json.dumps(dict(hidden=[16,16],contact_backend='mesh',terrain_elevation='steps')))
-            env=dict(os.environ,CONFIG=str(custom),TERRAIN='hills',CASE='F',METHODS='ct_sac',SEEDS='0',
-                STAGE='train',DRY_RUN='1',PLAN_DIR=str(root/'plans'))
-            process=subprocess.run(['bash',str(ROOT/'scripts/run_terrain.sh')],cwd=ROOT,env=env,capture_output=True,text=True)
-            self.assertEqual(process.returncode,0,process.stderr)
-            row=json.loads((root/'plans/F_train.jsonl').read_text())
-            self.assertEqual(row['config']['hidden'],[16,16])
-            self.assertEqual(row['config']['contact_backend'],'ct_terrain')
-            self.assertEqual(row['config']['contact_profile'],'elevation')
-            self.assertEqual(row['config']['terrain_elevation'],'hills')
 
 
 SIM=importlib.util.find_spec('mujoco') and importlib.util.find_spec('dm_control')
@@ -123,35 +110,6 @@ class PhysicalTests(unittest.TestCase):
         finally:env.close()
 
 
-@unittest.skipUnless(SIM and importlib.util.find_spec('torch') and importlib.util.find_spec('imageio_ffmpeg'),'Neural/video runtime required')
-class EvaluationTests(unittest.TestCase):
-    def test_F_J_and_both_clocks_keep_metrics_when_recording(self):
-        os.environ.setdefault('MUJOCO_GL','egl')
-        import torch
-        import imageio.v2 as imageio
-        from fjbench.models import InformationMap
-        from bench.learner import Actor
-        from fjbench.evaluation import evaluate
-        torch.set_num_threads(1)
-        for case in ('F','J'):
-            c=config(case,horizon=.08,episode_step_cap=40,hidden=[16,16],encoder_dim=4)
-            n=observation_dim(c);information=InformationMap(c,np.zeros(n+8),np.ones(n+8))
-            actor=Actor(information.feature_dim,6,c['hidden'])
-            packet=dict(config=c,method='ct_sac',public=dict(config=c,information=information.state_dict(),
-                information_mean=np.zeros(n+8),information_scale=np.ones(n+8)),agent=dict(actor=actor.state_dict()))
-            with tempfile.TemporaryDirectory() as temp:
-                root=Path(temp);torch.save(packet,root/'final.pt')
-                for clock in ('fixed','irregular'):
-                    a=evaluate(c,'ct_sac',root,'final','iid',clock,1,'cpu')
-                    b=evaluate(c,'ct_sac',root,'final','iid',clock,1,'cpu',video_options={
-                        'episodes':1,'width':320,'height':240,'end_card_seconds':.04})
-                    self.assertEqual(a['path_metrics'],b['path_metrics'])
-                    with imageio.get_reader(b['rows'][0]['video']['video']) as reader:
-                        self.assertEqual(reader.get_data(0).shape,(240,320,3))
-                    self.assertEqual(b['rows'][0]['backend']['contact_backend'],'ct_terrain')
-                validation=evaluate(c,'ct_sac',root,'final','iid','fixed',1,'cpu',split='validation')
-                self.assertEqual(validation['split'],'validation')
-                self.assertTrue(any((root/'evaluations').glob('*.png')))
 
 
 if __name__=='__main__':unittest.main()

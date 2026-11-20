@@ -145,7 +145,7 @@ def prepare_artifact(directory,settings=None):
     directory=Path(directory);calibration,data,norm=load(directory)
     from .config import options as validate_options
     s=dict(calibration['settings'] if settings is None else settings)
-    if 'pure' not in s:raise ValueError('Prepare a new artifact with cases/pure_cpht.json')
+    if 'pure' not in s:raise ValueError('Calibration settings need a "pure" block (see experiments/*.json)')
     s['pure']=validate_options(s['pure']);torch.set_num_threads(1)
     signature=digest(dict(schema='pure_cpht_mechanics_v2',calibration=calibration['calibration_id'],options=s['pure']))[:12]
     path=directory/('pure_model_'+signature+'.json')

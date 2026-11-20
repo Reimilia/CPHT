@@ -81,33 +81,43 @@ All native candidates use copied `MjData`. The compiled `MjModel` is read withou
 
 ## How to run
 
-Use the existing Torch environment and install `requirements-physical-first.txt`. The local validation used MuJoCo 3.17.0 and dm-control 1.0.50. Extract `sensor.zip`; `SENSOR_ROOT` must point to the directory containing `F/` and `J/`.
+Install `requirements.txt`. The local validation used MuJoCo 3.17.0 and dm-control 1.0.50. Extract `sensor.zip`; `SENSOR_ROOT` must point to the directory containing `F/` and `J/`.
+
+The simplest route is the `verify` stage of the experiment launcher. It replays the recorded transitions, runs `tools/paper_checks.py`, and, when `SENSOR_ROOT` is set, the full reference comparison below into `runs/<scale>/mujoco_reference`:
+
+```bash
+SENSOR_ROOT=/absolute/path/to/sensor ./run_experiments.sh smoke verify
+```
+
+For finer control, call the module directly:
 
 ```bash
 export SENSOR_ROOT=/absolute/path/to/sensor
 export MUJOCO_GL=egl
 
 # Full 20 m / 12 s paired episodes, both cases and both clocks; no training.
-MODE=compare OUT=outputs/reference bash scripts/run_mujoco_reference.sh
+python -m mujoco_reference compare --sensor-root "$SENSOR_ROOT" --output outputs/reference
 
 # Fast first check: exact local controls and saved learned feedback.
-MODE=compare OUT=outputs/reference_local bash scripts/run_mujoco_reference.sh \
+python -m mujoco_reference compare --sensor-root "$SENSOR_ROOT" --output outputs/reference_local \
   --methods learned_feedback mujoco_ls mujoco_fd_ls --clocks fixed
 
 # Generate real terrain-state transitions with five .002 s substeps per hold.
-MODE=sample OUT=outputs/reference bash scripts/run_mujoco_reference.sh --clock fixed
+python -m mujoco_reference sample --sensor-root "$SENSOR_ROOT" --output outputs/reference/samples --clock fixed
 
 # Check an exported input/action/successor without the training archive.
 python -m mujoco_reference validate outputs/reference/samples/F_transition.json
 ```
 
-`--episodes 5` supplies five paired evaluation episodes per cell. Keep the training seed separate from the evaluation-episode seed when later aggregating results. `--video-episodes 1` records the first episode of each cell using the existing renderer. `--max-seconds .5` is an installation diagnostic and is labeled `diagnostic_cutoff`; it cannot establish course success. Use a new `OUT` directory to preserve earlier results.
+These audits read checkpoints trained before v3.8, which saw the requested hold. Their settings carry no `hold_disclosure` key, so the environment keeps the disclosed-hold interface for them.
+
+`--episodes 5` supplies five paired evaluation episodes per cell. Keep the training seed separate from the evaluation-episode seed when later aggregating results. `--video-episodes 1` records the first episode of each cell using the existing renderer. `--max-seconds .5` is an installation diagnostic and is labeled `diagnostic_cutoff`; it cannot establish course success. Use a new `--output` directory to preserve earlier results.
 
 For a larger planning budget, pass `--candidates 48 --iterations 3 --horizon-steps 40 --replan-seconds .04`. That increases evaluation compute and still runs no training. It also changes the baseline specification and should receive a separate output directory.
 
 To match the uploaded pure-CPHT planner's search settings, use `--candidates 48 --elites 8 --iterations 3 --horizon-steps 20 --replan-seconds .04`. The checked eight-candidate comparison uses substantially less search, so its learned-MPC results are not a replay of the videos under their original planning budget.
 
-The reader uses restricted Torch checkpoint loading with an explicit NumPy allowlist for the supplied legacy checkpoint format. The archive contains no CT-SAC `final.pt`, so a new CT-SAC replay comparison cannot be produced from these uploads. Add the missing trained policy checkpoint before using the existing frozen CT-SAC evaluator. Do not infer numerical evaluation results by digitizing its videos.
+The reader uses restricted Torch checkpoint loading with an explicit NumPy allowlist for the supplied legacy checkpoint format. The archive contains no CT-SAC `final.pt`, so a CT-SAC replay comparison cannot be produced from these uploads. CT-SAC runs trained by `run_experiments.sh` are evaluated in the main paired evaluation instead. Do not infer numerical evaluation results by digitizing its videos.
 
 ## Concrete pipeline input and received transition
 
@@ -168,4 +178,4 @@ The current F/J experiment samples a regime per episode. J alone does not establ
 - [MuJoCo API: forward dynamics, state access, copied data, and finite differences](https://mujoco.readthedocs.io/en/stable/APIreference/APIfunctions.html).
 - [dm_control engine source: split-step convention](https://github.com/google-deepmind/dm_control/blob/main/dm_control/mujoco/engine.py). The checked installed version is 1.0.50.
 
-This extension uses native MuJoCo and finite differences. It does not claim to reproduce SuperMimic training. The preceding differentiable experiment and its source attribution remain in `DIFFERENTIABLE_CPHT.md`.
+This extension uses native MuJoCo and finite differences. It does not claim to reproduce SuperMimic training. The differentiable experiment and its source attribution are in [DIFFERENTIABLE_CPHT.md](DIFFERENTIABLE_CPHT.md).

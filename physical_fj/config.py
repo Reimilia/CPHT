@@ -6,13 +6,23 @@ from fjbench.config import config_from,calibration_key
 
 METHODS=('ct_sac','cpht_sac','sac','ct_sac_ph','pure_cpht')
 TERRAINS=('hills','friction','terrain','slopes','steps')
+# Course families on the pinned CT terrain heightfields (fixed F course seed 1).
+TERRAIN_PRESETS={
+    'hills':dict(contact_profile='elevation',terrain_elevation='hills'),
+    'friction':dict(contact_profile='friction',terrain_elevation='hills'),
+    'terrain':dict(contact_profile='mixed',terrain_elevation='hills'),
+    'slopes':dict(contact_profile='mixed',terrain_elevation='slopes'),
+    'steps':dict(contact_profile='mixed',terrain_elevation='steps')}
 
 
 def settings(case='F',terrain='terrain',seed=0,**extra):
     s=dict(schema='physical_first_v1',case=case,terrain=terrain,seed=int(seed),
         total_decisions=1_000_000,calibration_decisions=2048,calibration_episode_steps=32,
         nominal_mass_scale=.8,nominal_stiffness_scale=1.2,nominal_damping_scale=1.4,hidden=[256,256],batch=256,
-        capacity=300000,lr=3e-4,tau=.005,save_every=100000,log_every=1000)
+        capacity=300000,lr=3e-4,tau=.005,save_every=100000,log_every=1000,
+        # Paper Sec. 2.6/4.7: the next hold is drawn after the command is chosen.
+        # False hides it from every policy input; True restores the v3.7 interface.
+        hold_disclosure=False)
     unknown=set(extra)-set(s)-{'pure','sensing'}
     if unknown:raise ValueError(f'Unknown physical-first settings: {unknown}')
     s.update(extra)
@@ -26,6 +36,7 @@ def settings(case='F',terrain='terrain',seed=0,**extra):
     counts=('seed','total_decisions','calibration_decisions','calibration_episode_steps','batch','capacity','save_every','log_every')
     if any(not isinstance(s[k],int) or isinstance(s[k],bool) for k in counts):raise ValueError('Counts and seed must be integers')
     if not 0<=s['seed']<3000:raise ValueError('Use a seed in [0,3000)')
+    if not isinstance(s['hold_disclosure'],bool):raise ValueError('hold_disclosure must be true or false')
     if s['calibration_decisions']<16 or s['total_decisions']<=s['calibration_decisions']:
         raise ValueError('Reserve at least 16 calibration decisions and a positive policy budget')
     if any(not math.isfinite(s[k]) or s[k]<=0 for k in ('nominal_mass_scale','nominal_stiffness_scale','nominal_damping_scale','lr','tau')):raise ValueError('Positive finite physical scales and learning rates required')
@@ -37,16 +48,18 @@ def settings(case='F',terrain='terrain',seed=0,**extra):
 
 
 def control(s,path=None):
-    # Keep terrain/task settings from the existing benchmark. Its observer,
-    # node-bank, and value-operator preparation are unused in this pipeline.
-    c=config_from(path or f"cases/path_speed_ct_{s['terrain']}.json",s['case'],'contact',s['seed'],
-        extra=dict(control_task='path_speed',calibration_decisions=s['calibration_decisions'],
-            total_decisions=s['total_decisions'],batch=min(s['batch'],s['calibration_decisions'])))
-    if c['contact_robot_variation']:raise ValueError('The three-parameter pilot uses the same robot across contact environments')
+    """Path-speed task on the CT terrain course family named by s['terrain'].
+
+    path optionally names a JSON file of task overrides that replaces the preset.
+    """
+    extra=dict(control_task='path_speed',calibration_decisions=s['calibration_decisions'],
+        total_decisions=s['total_decisions'],batch=min(s['batch'],s['calibration_decisions']))
+    if path is None:extra.update(contact_backend='ct_terrain',contact_fixed_seed=1,**TERRAIN_PRESETS[s['terrain']])
+    c=config_from(path,s['case'],'contact',s['seed'],extra=extra)
+    if c['contact_robot_variation']:raise ValueError('The pipeline keeps the same robot across contact environments')
     if 'sensing' in s:
         if len(c['contact_offsets'])!=7:raise ValueError('The sensing experiment uses seven probe locations')
         if s['sensing']['sensor_period']<c['physics_dt']-1e-12:raise ValueError('Sensor period must be at least one physics step')
-    elif s.get('pure',{}).get('terrain_probes') and c['contact_sensor']!='geometry':raise ValueError('Pure CPHT uses the declared geometric probe sensor')
     return c
 
 
@@ -58,6 +71,7 @@ def calibration_id(s,c):
         contract.update(measurements='physics_rate_environment_belief_v1',sensing=s['sensing'],
             point_labels='pure' in s and s['pure'].get('contact_supervision','point_labels')=='point_labels',
             contact_closure_data='pure' in s,contact_supervision=s.get('pure',{}).get('contact_supervision','point_labels'))
+    if s.get('hold_disclosure'):contract['hold_disclosure']=True
     return digest(contract)[:12]
 
 

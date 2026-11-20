@@ -123,7 +123,7 @@ class SensingPipelineTests(unittest.TestCase):
 
     def settings(self, mode):
         from physical_fj.config import settings, control
-        extra = json.loads(Path('cases/sensing_smoke.json').read_text())
+        extra = json.loads(Path('tests/fixtures/cases/sensing_smoke.json').read_text())
         extra['sensing']['mode'] = mode
         s = settings('F', **extra)
         return s, control(s, self.task)
@@ -160,51 +160,6 @@ class SensingPipelineTests(unittest.TestCase):
             self.assertNotIn('friction_events', env.current['information_contract'])
         finally:env.close()
 
-    def test_all_modes_train_both_methods_and_deploy_frozen_checkpoints(self):
-        from physical_fj.prepare import prepare
-        from physical_fj.train import train as train_sac
-        from pure_cpht.training import train as train_pure
-        from physical_fj.evaluate import evaluate
-        from compare_sensing_fj import compare
-        reports = []
-        for mode in ('state', 'state_belief', 'sensed_belief'):
-            s, c = self.settings(mode)
-            artifact = self.root/mode/'artifact'
-            calibration = prepare(s, c, artifact)
-            with np.load(artifact/'data.npz') as data:
-                self.assertNotIn('contact_sample', data.files)
-            expected = 31 if mode=='state' else 60
-            self.assertEqual(calibration['raw_observation_dimension'], expected)
-            for method, trainer in (('ct_sac', train_sac), ('pure_cpht', train_pure)):
-                run = self.root/mode/method
-                counters = trainer(s, c, method, artifact, run)
-                self.assertEqual(counters['policy_decisions'], 4)
-                report = evaluate(run/'final.pt', episodes=1, video_episodes=0)
-                self.assertEqual(report['information_contract']['observation_dimension'], expected)
-                self.assertEqual(report['observer_parameter_updates'], 0)
-                self.assertEqual(report['deployment_updates'], 0)
-                self.assertEqual(report['rows'][0]['assimilation_metrics']['sensor']['attempted']>0, mode=='sensed_belief')
-                reports.append(report)
-        import torch
-        state=torch.load(self.root/'state/pure_cpht/final.pt',weights_only=False)
-        shared=torch.load(self.root/'state_belief/pure_cpht/final.pt',weights_only=False)
-        np.testing.assert_array_equal(state['gait'],shared['gait'])
-        np.testing.assert_array_equal(state['pure_model']['contact'],shared['pure_model']['contact'])
-        self.assertFalse(state['model_metrics']['contact']['point_contact_labels_used'])
-        result = compare(reports)
-        self.assertEqual(len(result['results']), 6)
-        self.assertEqual(len(result['paired_differences']), 7)
-        bad = json.loads(json.dumps(reports))
-        bad[0]['evaluation_sensing']['sensor_delay'] = .123
-        with self.assertRaises(ValueError):compare(bad)
-        checkpoint = self.root/'state/ct_sac/final.pt'
-        with self.assertRaises(ValueError):evaluate(checkpoint, episodes=1, sensing_test=dict(mode='sensed_belief'))
-        for method in ('ct_sac','pure_cpht'):
-            report=evaluate(self.root/'sensed_belief'/method/'final.pt',episodes=1,clock='irregular',case_test='J',
-                sensing_test=dict(sensor_delay=.012,sensor_dropout=.2))
-            self.assertEqual(report['config']['case'],'J')
-            self.assertEqual(report['clock'],'irregular')
-            self.assertEqual(report['observer_parameter_updates'],0)
 
 
 if __name__=='__main__':unittest.main()

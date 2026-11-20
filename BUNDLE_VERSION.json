@@ -1,82 +1,39 @@
 {
-  "release": "3.7-mujoco-reference",
-  "built_date": "2026-11-06",
-  "config_schema": 4,
+  "release": "3.8-unified",
+  "built_date": "2026-11-20",
+  "previous_release": "3.7-mujoco-reference",
+  "entry_point": "run_experiments.sh",
+  "profiles": [
+    "experiments/smoke.json",
+    "experiments/pilot.json",
+    "experiments/full.json"
+  ],
+  "comparison_schema": "cpht_comparison_v1",
+  "ph_engine_methods": [
+    "cem",
+    "shooting",
+    "selector",
+    "selector_value"
+  ],
+  "baseline_methods": [
+    "ct_sac"
+  ],
+  "information_modes": [
+    "state",
+    "state_belief",
+    "sensed_belief"
+  ],
+  "hold_disclosure_default": false,
   "terrain_reference_commit": "297ecbedb1b7510439f85927aa4b70d893f681e8",
-  "default_physical_backend": "ct_terrain (path-speed contact presets)",
-  "fixed_F_course_seed": 1,
-  "J_course_draw": "fresh each episode",
   "default_path_task": {
     "length_m": 20,
     "target_speed_m_s": 3,
     "deadline_s": 12
   },
-  "sensors_changed": true,
-  "algorithm_presets": [
-    "core",
-    "ct",
-    "solver",
-    "all"
-  ],
-  "full_training_launched": false,
-  "calibration_protocol": "goal_balanced_v2",
-  "full_calibration_launched": false,
-  "physical_first_schema": "physical_first_v1",
-  "physical_first_sensor_contract": "instrumented q, v, constraint force; acceleration and actuator torque at calibration",
-  "physical_first_methods": [
-    "ct_sac",
-    "cpht_sac",
-    "sac",
-    "ct_sac_ph"
-  ],
-  "physical_first_calibration_parameters": 3,
-  "physical_first_value_inverse": false,
-  "physical_first_total_decisions": 1000000,
-  "physical_first_calibration_decisions": 2048,
-  "physical_first_interpretation": "physical-feature ablation with conventional SAC/CT-SAC targets",
-  "legacy_sensors_changed": false,
-  "finite_recovery_revision": 2,
-  "sensor_change_scope": "physical_fj only; earlier fjbench observation interfaces unchanged",
-  "pure_cpht_schema": "mechanical_feedback_v1",
   "pure_cpht_mechanical_parameters": 32,
   "pure_cpht_contact_parameters": 4,
   "pure_cpht_motion_parameters": 19,
-  "pure_cpht_actor": false,
-  "pure_cpht_critic": false,
-  "pure_cpht_default_decisions": 100000,
-  "pure_cpht_calibration_decisions": 4096,
-  "pure_cpht_sensors": "exact q/v and constraint-force ports; noisy local height/slope probes; acceleration/contact labels at calibration",
-  "pure_cpht_deployment": [
-    "receding_horizon_feedback",
-    "saved_gait_feedback"
-  ],
-  "legacy_v3_3_identities_preserved": true,
-  "sensing_schema": "environment_belief_v1",
-  "sensing_modes": [
-    "state",
-    "state_belief",
-    "sensed_belief"
-  ],
-  "sensing_dimensions": {
-    "state": 31,
-    "state_belief": 60,
-    "sensed_belief": 60
-  },
-  "sensing_contact_supervision": "aggregate_ports",
-  "legacy_v3_4_identities_preserved": true,
-  "sensing_estimator_parameters_frozen_at_evaluation": true,
-  "sensing_state_adapts_at_evaluation": true,
   "mujoco_reference_schema": "mujoco_reference_v1",
   "transition_schema": "cheetah_transition_v1",
-  "reference_methods": [
-    "learned_feedback",
-    "mujoco_ls",
-    "mujoco_fd_ls",
-    "learned_mpc",
-    "mujoco_mpc"
-  ],
-  "reference_evaluation_episodes": 20,
-  "reference_training_launched": false,
-  "reference_model_refits": 0,
-  "reference_information_access": "native MuJoCo arms are explicitly privileged"
+  "full_training_launched": false
 }

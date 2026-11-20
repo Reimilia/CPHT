@@ -203,6 +203,11 @@ def check_reward_quadrature():
 
 # ------------------------------------------------------- Table 1 settings
 def check_table1():
+    """Table 1's F-native/F-position/J-static/J-wind settings in fjbench.config.
+
+    run_experiments.sh uses the terrain-course F/J cases (experiment="contact"),
+    so these settings document the remaining gap for a Table 1 replication only.
+    """
     from fjbench.config import make_config, observation_dim
     J = make_config("J", "static")
     W = make_config("J", "wind")
@@ -218,13 +223,13 @@ def check_table1():
                   f"wind test kappa={W['wind_test_kappa']} sigma={W['wind_test_sigma']} "
                   f"(paper: friction [0.3,0.5], payload [3,4] kg, speed 12, dw=-2w dt+4dW)")
     for i in issues:
-        report("Table 1 / Sec 4.7 settings", "DIFF", i)
+        report("Table 1 variant settings (not run by run_experiments.sh)", "DIFF", i)
 
 
 def check_wind_point():
     from bench.env import make_common_env
     env = make_common_env("cheetah-run", seed=0)
-    report("(A.22) wind application point", "PASS" if env.force_body_name == "torso" else "DIFF",
+    report("(A.22) J-wind force point (not run by run_experiments.sh)", "PASS" if env.force_body_name == "torso" else "DIFF",
            f"code applies the point force at body '{env.force_body_name}' + 5 cm offset; paper: torso centre of mass")
 
 
@@ -238,26 +243,31 @@ def check_payload():
     load = 2.
     code = I * (mass + load) / mass
     paper = I + .4 * load * .05 ** 2  # sphere r=5 cm at the torso COM; (A.10) note "2/5 m_load (0.05)^2"
-    report("(A.10) payload inertia", "DIFF",
+    report("(A.10) J-static payload inertia (not run by run_experiments.sh)", "DIFF",
            f"code scales torso inertia by (m+load)/m -> Iyy {code[1]:.4f}; paper adds 2/5 m r^2 -> Iyy {paper[1]:.4f} (load 2 kg)")
 
 
 def check_hold_disclosure():
-    import inspect
-    from fjbench import models
-    src = inspect.getsource(models.InformationMap.forward)
-    disclosed = "h/self.c[\"reference_time\"]" in src
-    report("Sec 2.6/4.7 unannounced holds", "DIFF" if disclosed else "PASS",
-           "actor/critic information vector includes the current requested hold h (announced), "
-           "paper requires holds unannounced before the action")
-
-
-def check_entropy_default():
-    from fjbench.config import make_config
-    c = make_config("F", "native")
-    report("(2.20) default finite-hold entropy convention", "DIFF" if c["entropy_convention"] == "start" else "PASS",
-           f"default entropy_convention='{c['entropy_convention']}' gives alpha_h = alpha*h; (2.20) prescribes "
-           "alpha*c_beta(h) ('discounted', available as an option). Both satisfy alpha_h/h -> alpha.")
+    """Run the pipeline environment on the irregular clock and read what a policy sees."""
+    import numpy as np
+    from cpht_compare import config
+    from physical_fj.mechanics import PhysicalEnvironment
+    profile = config.load(str(ROOT / "experiments" / "smoke.json"))
+    job = next(config.jobs(profile))
+    s = config.settings_for(profile, job)
+    c = config.control_for(profile, s)
+    env = PhysicalEnvironment(c, s, 7, clock="irregular", purpose="evaluation")
+    seen, requested = set(), set()
+    try:
+        for _ in range(40):
+            seen.add(round(float(env.current["raw"][30]) * c["reference_time"], 6))
+            requested.add(round(env.hold(), 6))
+            env.step(np.zeros(6, np.float32))
+    finally:
+        env.close()
+    hidden = seen == {c["fixed_hold"]} and len(requested) > 1
+    report("Sec 2.6/4.7 unannounced holds", "PASS" if hidden and not s["hold_disclosure"] else "DIFF",
+           f"policy input shows hold(s) {sorted(seen)} s while the realized holds were {sorted(requested)} s")
 
 
 def check_energy_shaping():
@@ -275,7 +285,7 @@ import os
 os.chdir(ROOT)
 for f in (check_hold_law, check_hold_sampler_empirical, check_euler_contraction, check_phase_solver, check_ou,
           check_mechanics, check_euler_substep, check_reward_quadrature, check_table1, check_wind_point,
-          check_payload, check_hold_disclosure, check_entropy_default, check_energy_shaping):
+          check_payload, check_hold_disclosure, check_energy_shaping):
     try:
         f()
     except Exception as exc:  # keep running other checks

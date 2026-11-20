@@ -1,4 +1,4 @@
-# Differentiable pure-CPHT cheetah experiment
+# The pH engine: equations of the differentiable CPHT experiment
 
 ## What is adapted
 
@@ -14,7 +14,7 @@ The four methods isolate motion search and motion-selector learning. The inspect
 | Detached TD(lambda) fitting | Variable-duration physical-time discounts |
 | Logged simulator starts | Training-calibration and current on-policy causal information |
 
-The model is fitted by existing positive mechanical/contact calibration and shared across methods. This revision does not fit a generic neural world model on eight-step windows, refit the model after every policy update, use a human-motion dataset, or reproduce the humanoid experiments. The legacy pure-CPHT pipeline retains its own model-refitting experiment.
+The model is fitted by positive mechanical/contact calibration and shared across methods. This experiment does not fit a generic neural world model on eight-step windows, refit the model after every policy update, use a human-motion dataset, or reproduce the humanoid experiments.
 
 ## Layer I: task and information
 
@@ -78,15 +78,11 @@ This is a structured policy family. It supplies no exact HJB-optimality, Hamilto
 
 ## Layer III: physical time and environmental approximation
 
-Actual physics uses 2 ms MuJoCo steps. The ordinary control interval is 10 ms. Current requested holds are announced by the inherited interface. Commands remain fixed across predictive substeps.
+Actual physics uses 2 ms MuJoCo steps. The ordinary control interval is 10 ms. Commands remain fixed across predictive substeps.
 
-For `L` prediction intervals and an irregular first hold, the actual imagined duration is
+Holds are unannounced (paper Sec. 2.6). With the default `hold_disclosure: false`, every policy input and the imagined rollout use the nominal hold $h_{\rm nominal}=0.01$ s, and the next hold is drawn only after the command is chosen. The realized hold is recorded after each step and used for discounting and reward accounting. For `L` prediction intervals the imagined duration is $L\,h_{\rm nominal}$. Irregular-clock evaluation measures the cost of this nominal-hold approximation.
 
-$$
-h_{\rm current}^{\rm req}+(L-1)h_{\rm nominal}.
-$$
-
-Future intervals use the nominal planning clock. Irregular-clock evaluation tests this approximation. This implementation does not solve the unannounced-hold problem.
+Setting `hold_disclosure: true` (or `--disclose-holds`, `DISCLOSE_HOLDS=1`) restores the v3.7 interface, where the current requested hold enters the policy input and the first imagined interval, giving $h_{\rm current}^{\rm req}+(L-1)h_{\rm nominal}$. Use it only as an ablation.
 
 Imagined trajectories retain the current world-registered scan and friction estimate. Predicted pose transports height/slope features; evidence ages increase. Predicted pose/velocity and force ports replace their measured counterparts. No future measurement, private map, intervention timestamp, or true friction enters the selector.
 
@@ -169,5 +165,5 @@ Recovery stores learned weights, optimizers, replay starts, random generators, a
 - [Authors' project](https://supermimic.github.io/).
 - [Independent reproduction, pinned tree](https://github.com/CuboiLeo/SuperMimic-Reproduced/tree/ba6105349069bf040f1fdad60873d13138d505a2).
 - Inspected upstream files: `imagination/objective.py`, `imagination/policy_trainer.py`, `imagination/rollout.py`, `world_model/wm_trainer.py`.
-- Retained local guides: `PURE_CPHT.md`, `SENSING_EXPERIMENT.md`, `PHYSICAL_FIRST.md`.
+- How to run every stage and scale: [EXPERIMENTS.md](EXPERIMENTS.md).
 

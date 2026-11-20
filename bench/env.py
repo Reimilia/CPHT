@@ -29,13 +29,6 @@ def entropy_weight(task, native_dt, gamma_native, clock):
     return float(probabilities @ (-np.expm1(-beta * intervals / native_dt) / beta))
 
 
-def make_paper_env(task, seed, clock="irregular"):
-    source_root()
-    from environment.dmc import DMCContinuousEnv
-    domain, name = task.split("-", 1)
-    return DMCContinuousEnv(domain, name, seed=seed, **env_kwargs(task, clock))
-
-
 def make_common_env(task, seed, clock="irregular", context="nominal", gamma_native=.98):
     if context not in CONTEXTS:
         raise ValueError(f"Unknown context {context}")

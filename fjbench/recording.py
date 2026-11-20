@@ -1,7 +1,18 @@
 """Read-only physical-time recording shared by checkpoint evaluation."""
 from pathlib import Path
 import json
-from render_fj import FrameClock
+
+
+class FrameClock:
+    """Sample uniform physical-time frames from physics-substep callbacks."""
+    def __init__(self,fps,seconds):
+        self.fps=fps;self.seconds=seconds;self.count=0
+
+    def due(self,simulation_time):
+        targets=[]
+        while self.count/self.fps<self.seconds-1e-10 and self.count/self.fps<=simulation_time+1e-10:
+            targets.append(self.count/self.fps);self.count+=1
+        return targets
 
 
 class EpisodeRecorder:

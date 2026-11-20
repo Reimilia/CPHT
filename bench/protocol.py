@@ -1,7 +1,6 @@
 """Protocol and provenance. This module uses the Python standard library."""
 from __future__ import annotations
 
-import csv
 import hashlib
 import importlib.metadata
 import json
@@ -30,9 +29,6 @@ TASKS = {
                           max_steps=2000, episode_duration=20., tail_p=.99, tail_split=.9,
                           decisions=1_000_000),
 }
-RELEASED = ("ct_sac", "ct_td3", "q_learning", "cppo", "sac", "td3", "ppo", "trpo")
-MATCHED = ("sac_smdp", "ct_sac_corrected", "ct_picard", "tpht", "collocation_direct",
-           "picard", "tpht_damping")
 CONTEXTS = ("nominal", "damping_1p5", "mass_1p2", "point_drag", "point_pulse")
 
 
@@ -103,70 +99,6 @@ def env_kwargs(task, clock="irregular"):
                 episode_duration=t["episode_duration"], return_reward_increment=False,
                 time_sampling_kwargs=dict(dist="two_tail_uniform", tail_p=t["tail_p"],
                                           tail_split=t["tail_split"]))
-
-
-def released_row(algo, task, rank):
-    with (source_root() / "benchmarks/hyperparams" / f"{algo}.csv").open() as f:
-        rows = [r for r in csv.DictReader(f) if r["env_id"] == task and r["mode"] == rank]
-    if len(rows) != 1:
-        raise ValueError(f"Expected one configuration for {algo}/{task}/{rank}")
-    return rows[0]
-
-
-def make_job(track, task, algo, seed, rank="top", clock="irregular", settings=None):
-    if task not in TASKS:
-        raise ValueError("Use a control task from TASKS")
-    if not 0 <= int(seed) < 3000 or clock not in ("regular", "irregular"):
-        raise ValueError("Use a seed in [0,3000) and a regular/irregular clock")
-    choices = RELEASED if track == "released" else MATCHED
-    if track not in ("released", "matched") or algo not in choices:
-        raise ValueError("Unknown track or method")
-    job = dict(schema=1, track=track, task=task, algo=algo, seed=int(seed), rank=rank,
-               clock=clock, source_sha256=SOURCE_SHA256, task_spec=TASKS[task].copy(),
-               decision_budget=TASKS[task]["decisions"])
-    if track == "released":
-        if clock != "irregular":
-            raise ValueError("Released training uses its CSV clock. Use regular clocks at evaluation.")
-        job["csv_row"] = released_row(algo, task, rank)
-        job["decision_budget"] = int(job["csv_row"]["total_timesteps"])
-    else:
-        job["settings"] = dict(batch_size=256, replay_capacity=300_000, warmup=10_000,
-                               hidden=[400, 300], learning_rate=3e-4,
-                               gamma_native=.99 if task == "humanoid-walk" else .98,
-                               alpha_rate=.2, polyak=.005, knn=8, kernel_temperature=1.,
-                               picard_eta=.5, solver_sigma=.5, solver_damping=1.,
-                               solver_omega=3., solver_steps=1, save_every=100_000,
-                               log_every=1000, gradient_updates_per_decision=1)
-        if settings:
-            job["settings"].update(settings)
-        if job["settings"]["gradient_updates_per_decision"] != 1:
-            raise ValueError("This protocol specifies one actor and one critic update per decision.")
-        if not 0 < job["settings"]["gamma_native"] < 1:
-            raise ValueError("gamma_native must lie in (0,1)")
-        c = job["settings"]
-        if min(c["batch_size"], c["replay_capacity"], c["knn"], c["solver_steps"],
-               c["save_every"], c["log_every"], c["kernel_temperature"], c["learning_rate"]) <= 0:
-            raise ValueError("Counts, kernel temperature, and learning rate must be positive")
-        if c["warmup"] < c["batch_size"] or c["replay_capacity"] < c["batch_size"]:
-            raise ValueError("Warmup and replay capacity must cover a batch")
-        if not 0 < c["picard_eta"] <= 1 or not 0 < c["polyak"] <= 1 or c["alpha_rate"] <= 0:
-            raise ValueError("Invalid relaxation, target averaging, or entropy temperature")
-        if c["solver_sigma"] <= 0 or c["solver_damping"] <= 0:
-            raise ValueError("The phase solver requires positive solver time and damping")
-    job["run_id"] = f"{track}/{task}/{algo}/seed_{seed}_{digest(job)[:10]}"
-    return job
-
-
-def read_job(plan, index):
-    lines = [s for s in Path(plan).read_text().splitlines() if s.strip()]
-    job = json.loads(lines[index])
-    if job["source_sha256"] != SOURCE_SHA256 or job["task"] not in TASKS:
-        raise ValueError("Plan provenance or task mismatch")
-    rebuilt = make_job(job["track"], job["task"], job["algo"], job["seed"],
-                       job["rank"], job["clock"], job.get("settings"))
-    if rebuilt != job:
-        raise ValueError("Plan was modified after construction. Generate it again.")
-    return job
 
 
 def versions():

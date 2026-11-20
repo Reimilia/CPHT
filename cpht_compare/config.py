@@ -5,7 +5,11 @@ import json
 import math
 from pathlib import Path
 
-METHODS = ("cem", "shooting", "selector", "selector_value")
+# pH-engine methods plan through the calibrated pH model; ct_sac is the
+# model-free baseline under the same sensors, calibration data and budget.
+PH_METHODS = ("cem", "shooting", "selector", "selector_value")
+BASELINES = ("ct_sac",)
+METHODS = PH_METHODS + BASELINES
 CONDITIONS = ("nominal", "layout", "friction_change", "sensor_shift", "steps")
 DEFAULTS = {
     "schema": "cpht_comparison_v1",
@@ -18,6 +22,7 @@ DEFAULTS = {
         "calibration_episode_steps": 32, "capacity": 300000,
         "hidden": [256, 256], "batch": 256,
         "save_every": 10000, "log_every": 1000,
+        "hold_disclosure": False,
         "pure": {"contact_supervision": "aggregate_ports"},
         "sensing": {"sensor_period": 0.02, "sensor_delay": 0.02,
                     "sensor_dropout": 0.05, "friction_events": []},
@@ -113,10 +118,15 @@ def load(path=None):
     return p
 
 def jobs(profile):
+    first = float(profile["horizons_seconds"][0])
     for mode, case, seed, horizon, method in itertools.product(
         profile["information_modes"], profile["cases"], profile["seeds"],
         profile["horizons_seconds"], profile["methods"]
     ):
+        # The baseline has no planning horizon: train it once, and pair its
+        # evaluations with the pH methods at the first declared horizon.
+        if method in BASELINES and float(horizon) != first:
+            continue
         yield dict(mode=mode, case=case, seed=seed, horizon=float(horizon), method=method)
 
 def settings_for(profile, job):
@@ -150,7 +160,7 @@ def paths(profile, job, run_root="runs/cpht_comparison", artifact_root="artifact
     artifact = Path(artifact_root) / job["mode"] / job["case"] / f"seed{job['seed']}_{identity}"
     signature = digest(dict(schema=profile["schema"], s=s, c=c, method=job["method"],
                             horizon=job["horizon"], optimization=profile["optimization"]))[:12]
-    horizon = f"h{round(1000 * job['horizon']):04d}ms"
+    horizon = "model_free" if job["method"] in BASELINES else f"h{round(1000 * job['horizon']):04d}ms"
     run = Path(run_root) / job["mode"] / job["case"] / horizon / job["method"] / f"seed{job['seed']}_{signature}"
     return s, c, artifact, run
 

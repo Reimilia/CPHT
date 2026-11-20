@@ -253,7 +253,3 @@ def label(c, method):
     if method == "ph_sac":
         return "CPHT-SAC" if c["ensembles"] == 1 else "TPHT-SAC"
     return method
-
-
-def source_record():
-    return json.loads((ROOT / "cases/sources.json").read_text())

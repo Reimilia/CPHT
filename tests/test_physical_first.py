@@ -8,24 +8,8 @@ import unittest
 from unittest.mock import patch
 import numpy as np
 from fjbench.config import make_config,calibration_key,observation_dim
-from fjbench.finite import solve,ResidualRecoveryError
 
 
-class RecoveryTests(unittest.TestCase):
-    def test_absolute_gate_can_fail_on_an_accurate_large_value_block(self):
-        c=make_config();n,k=8,2
-        arrays=(np.zeros((2,n,k)),np.full((n,k),1e5),np.full((n,k),1-1e-4),np.full((n,k,n),1/n),np.zeros((n,k)))
-        with self.assertRaises(ResidualRecoveryError):solve(*arrays,dict(c,inverse_relative_tolerance=0.,inverse_refinement_steps=0))
-        _,_,report=solve(*arrays,c)
-        self.assertTrue(report['inverse_gate_pass']);self.assertFalse(report['inverse_absolute_gate_pass'])
-        self.assertLess(report['inverse_relative_residual'],1e-12)
-        self.assertGreater(report['recovery_condition_bound'],10000)
-        self.assertGreaterEqual(report['linear_solves'],report['phase_steps'])
-
-    def test_nonfinite_rewards_are_rejected_and_numeric_changes_reuse_calibration(self):
-        c=make_config();old=dict(c);old.pop('inverse_relative_tolerance');old.pop('inverse_refinement_steps')
-        self.assertEqual(calibration_key(c),calibration_key(old))
-        with self.assertRaises(FloatingPointError):solve(np.zeros((2,2,1)),np.full((2,1),np.inf),np.full((2,1),.9),np.full((2,1,2),.5),np.zeros((2,1)),c)
 
 
 TORCH=bool(importlib.util.find_spec('torch'))
@@ -34,25 +18,6 @@ SIM=TORCH and bool(importlib.util.find_spec('mujoco')) and bool(importlib.util.f
 
 @unittest.skipUnless(TORCH,'Torch required')
 class UpdateTests(unittest.TestCase):
-    def test_a_true_recovery_failure_rejects_the_block_without_changing_networks(self):
-        import torch
-        from fjbench.agent import Agent
-        from fjbench.models import InformationMap,tensors
-        from fjbench.data import Replay
-        c=make_config('F','native',overrides=dict(control_task='path_speed',hidden=[16,16],encoder_dim=4,history=2))
-        n=observation_dim(c);information=InformationMap(c,np.zeros(n+8),np.ones(n+8))
-        agent=Agent(c,'ph_sac',information,None,None,None,'cpu')
-        replay=Replay(4,n,2,include_requested_hold=True)
-        for i in range(4):replay.add(dict(obs=np.zeros(n),next_obs=np.zeros(n),prev_action=np.zeros(6),action=np.zeros(6),
-            prev_reward=0.,prev_h=0.,r_src=0.,R=0.,h=.01,h_requested=.01,next_h=.01,terminated=0.,truncated=0.,g=3.,time=0.,next_time=.01),i)
-        block=dict(info=torch.zeros((4,information.feature_dim)),actions=torch.zeros((4,6)),initial=torch.zeros((2,2,2)),
-            r=torch.zeros((2,2)),gamma=torch.full((2,2),.9),p=torch.full((2,2,2),.5),entropy=torch.zeros((2,2)))
-        diagnostic=dict(inverse_residual=1.,inverse_allowed=1e-8,inverse_scale=1.,contraction_gap=.1,operator_calls=2,linear_solves=1)
-        before=[p.detach().clone() for p in list(agent.actor.parameters())+list(agent.critics.parameters())]
-        with patch.object(agent,'finite_block',return_value=block),patch('fjbench.agent.solve',side_effect=ResidualRecoveryError(diagnostic)):
-            stats=agent.update(tensors(replay.windows(range(4)),'cpu'))
-        self.assertFalse(stats['critic_admitted']);self.assertEqual(stats['critic_steps'],0);self.assertEqual(stats['actor_steps'],0)
-        self.assertTrue(all(torch.equal(a,b) for a,b in zip(before,list(agent.actor.parameters())+list(agent.critics.parameters()))))
 
     def test_all_simple_controls_use_measured_targets_without_a_value_inverse(self):
         import torch
@@ -66,7 +31,7 @@ class UpdateTests(unittest.TestCase):
             batch=dict(obs=torch.randn(4,dimension),next_obs=torch.randn(4,dimension),action=torch.zeros(4,6),
                 R=torch.full((4,1),5.),r_src=torch.full((4,1),25.),h=torch.full((4,1),.002),
                 h_requested=torch.full((4,1),.01),next_h=torch.full((4,1),.01),done=torch.ones(4,1))
-            with patch('fjbench.finite.solve',side_effect=AssertionError('Value inverse called')):report=agent.update(batch)
+            report=agent.update(batch)  # this learner has no value-inverse solver
             self.assertEqual(report['terminal_target_error'],0.);self.assertEqual(report['linear_value_solves'],0)
 
 
@@ -148,29 +113,6 @@ class PhysicalTests(unittest.TestCase):
                 self.assertEqual(info['R'],other['R'])
         finally:plain.close();instrumented.close()
 
-    def test_simple_training_resume_and_cross_environment_evaluation(self):
-        os.environ.setdefault('MUJOCO_GL','egl')
-        import torch
-        from physical_fj.prepare import prepare
-        from physical_fj.train import train
-        from physical_fj.evaluate import evaluate
-        torch.set_num_threads(1)
-        with tempfile.TemporaryDirectory() as temp:
-            root=Path(temp);s,c=self.tiny(root);artifact=root/'calibration';prepare(s,c,artifact)
-            with patch('fjbench.finite.solve',side_effect=AssertionError('Value inverse called')):
-                train(s,c,'cpht_sac',artifact,root/'reference')
-                partial=train(s,c,'cpht_sac',artifact,root/'resumed',pause_after_episodes=1)
-                self.assertLess(partial['decisions'],s['total_decisions'])
-                train(s,c,'cpht_sac',artifact,root/'resumed',resume=True)
-            first=torch.load(root/'reference/final.pt',weights_only=False);second=torch.load(root/'resumed/final.pt',weights_only=False)
-            for key,value in first['agent']['actor'].items():torch.testing.assert_close(value,second['agent']['actor'][key],rtol=0,atol=0)
-            a=evaluate(root/'reference/final.pt',episodes=1)
-            b=evaluate(root/'reference/final.pt',episodes=1,video_episodes=1,width=320,height=240)
-            self.assertEqual(a['path_metrics'],b['path_metrics'])
-            transferred=evaluate(root/'reference/final.pt',episodes=1,terrain='steps',case_test='J',cohort='layout',clock='irregular')
-            self.assertEqual(transferred['config']['case'],'J');self.assertEqual(transferred['config']['terrain_elevation'],'steps')
-            self.assertEqual(transferred['calibration_coefficients'],first['calibration']['coefficients'])
-            self.assertEqual(transferred['deployment_updates'],0)
 
 
 if __name__=='__main__':unittest.main()

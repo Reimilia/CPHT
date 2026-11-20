@@ -58,6 +58,9 @@ class PhysicalEnvironment:
         from fjbench.environment import Environment
         self.core=Environment(c,seed,episode,cohort,clock,purpose=purpose,**reset)
         self.nominal=nominal or NominalRobot(s)
+        # Settings saved before v3.8 have no key and were trained with the hold
+        # disclosed; keep that interface for them. New settings always set it.
+        self.hold_disclosure=bool(s.get('hold_disclosure',True))
         self.terrain_probes='sensing' not in s and bool(s.get('pure',{}).get('terrain_probes'))
         self.contact_labels=self.terrain_probes or ('sensing' in s and 'pure' in s)
         self.point_contact_labels=s.get('pure',{}).get('contact_supervision','point_labels')=='point_labels'
@@ -69,6 +72,15 @@ class PhysicalEnvironment:
         self.sensor_solves=0;self.current=self.observe()
 
     def __getattr__(self,name):return getattr(self.core,name)
+
+    def announced_hold(self):
+        """The hold a causal policy may see before it acts.
+
+        With hold_disclosure False (the default), the next hold is unannounced
+        (paper Sec. 2.6) and policies see the nominal fixed hold. The realized
+        hold is still recorded after the step in info['h'].
+        """
+        return self.core.hold() if self.hold_disclosure else self.core.config['fixed_hold']
 
     def snapshot(self,action=None):
         import mujoco
@@ -82,7 +94,7 @@ class PhysicalEnvironment:
         d=self.snapshot();q=d.qpos.copy();v=d.qvel.copy();port=d.qfrc_constraint.copy()
         c=self.core.config;t=self.core.base.cur_t;torso=self.core.base._env.physics.model.name2id('torso','body')
         raw=np.concatenate([q,v,port,[(self.core.path_task.goal-d.subtree_com[torso,0])/c['path_length'],
-            max(0.,1-t/c['horizon']),self.core.g/10.,self.core.hold()/c['reference_time']]]).astype(np.float32)
+            max(0.,1-t/c['horizon']),self.core.g/10.,self.announced_hold()/c['reference_time']]]).astype(np.float32)
         basis=self.nominal.evaluate(q,v);basis['port_power']=float(v@port)
         result=dict(raw=raw,basis=basis)
         if self.sensing is not None:

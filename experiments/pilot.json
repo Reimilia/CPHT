@@ -1,0 +1,46 @@
+{
+  "schema": "cpht_comparison_v1",
+  "cases": [
+    "F",
+    "J"
+  ],
+  "seeds": [
+    0
+  ],
+  "information_modes": [
+    "sensed_belief"
+  ],
+  "methods": [
+    "cem",
+    "shooting",
+    "selector",
+    "selector_value",
+    "ct_sac"
+  ],
+  "horizons_seconds": [
+    0.2
+  ],
+  "learning": {
+    "total_decisions": 6096,
+    "calibration_decisions": 1024,
+    "save_every": 1000,
+    "log_every": 100
+  },
+  "evaluation": {
+    "episodes": 2,
+    "clocks": [
+      "fixed",
+      "irregular"
+    ],
+    "conditions": [
+      "nominal",
+      "friction_change",
+      "sensor_shift"
+    ],
+    "test_cases": [
+      "same"
+    ],
+    "max_decisions": null,
+    "videos": 0
+  }
+}

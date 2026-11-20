@@ -24,13 +24,18 @@ class Replay:
         self.rows = deque(state["rows"], maxlen=self.rows.maxlen)
         self.rng.bit_generator.state = state["rng"]
 
-def calibration_replay(data, normalization, points, capacity, seed):
+def calibration_replay(data, normalization, points, capacity, seed, hold=None):
+    """Seed imagination with calibration states.
+
+    hold=None uses each record's requested hold (disclosed-hold interface);
+    a number imposes that nominal first hold (unannounced holds).
+    """
     replay = Replay(capacity, seed)
     rng = np.random.default_rng(seed + 1)
     for i in normalization["train_indices"]:
         row = snapshot(dict(raw=data["raw"][i], scan=data["scan"][i]),
                        rng.uniform(-np.pi, np.pi), float(data["raw"][i, 29] * 10),
-                       float(data["h_requested"][i]), points=points)
+                       float(data["h_requested"][i]) if hold is None else float(hold), points=points)
         replay.add(row)
     return replay
 

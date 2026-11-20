@@ -1,9 +1,0 @@
-{
-  "control_task": "path_speed",
-  "contact_backend": "ct_terrain",
-  "contact_fixed_seed": 1,
-  "contact_profile": "mixed",
-  "terrain_elevation": "hills",
-  "horizon": 0.08,
-  "episode_step_cap": 40
-}

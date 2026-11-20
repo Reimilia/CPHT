@@ -1,17 +1,17 @@
-# Python 3.11 or 3.12. Install a Torch wheel that fits the server's CUDA driver.
-torch==2.14.1
+# Python 3.11 or 3.12. Install a Torch build that fits your hardware first
+# (CPU or the CUDA version of your driver); Torch 2.9.1 and 2.15.0 are tested.
+torch>=2.9
+# Keep these pins: the recorded transition replays in validation/ are tied to
+# MuJoCo 3.17.0, and dm-control 1.0.50 is the matching cheetah release.
 numpy==2.3.5
 scipy==1.17.0
 mujoco==3.17.0
 dm-control==1.0.50
 gymnasium==1.4.0
-stable-baselines3==2.9.0
-sb3-contrib==2.9.0
-pandas
-matplotlib
-cloudpickle
-tensorboard
-tqdm
-imageio
+# Reports and optional evaluation videos.
+matplotlib>=3.9
+imageio>=2.31
 imageio-ffmpeg==0.6.0
-opencv-python-headless
+Pillow>=10
+# Tests.
+pytest>=8

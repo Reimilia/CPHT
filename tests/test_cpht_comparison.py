@@ -12,22 +12,30 @@ import numpy as np
 RUNTIME = all(importlib.util.find_spec(n) for n in ("torch", "mujoco", "dm_control", "gymnasium"))
 
 class ConfigurationTests(unittest.TestCase):
-    def test_plan_is_dry_and_has_four_methods_and_shared_calibrations(self):
+    def test_plan_is_dry_and_has_five_methods_and_shared_calibrations(self):
         from cpht_compare.config import load, plan
-        p = load("cases/cpht_comparison_smoke.json")
+        p = load("experiments/smoke.json")
         jobs = plan(p, "runs/test", "artifacts/test")
-        self.assertEqual(len(jobs), 8)
+        self.assertEqual(len(jobs), 10)
         self.assertEqual(len({x["artifact"] for x in jobs}), 2)
         for case in ("F", "J"):
             selected = [x for x in jobs if x["case"] == case]
             self.assertEqual({x["method"] for x in selected},
-                             {"cem", "shooting", "selector", "selector_value"})
+                             {"cem", "shooting", "selector", "selector_value", "ct_sac"})
             self.assertEqual(len({x["calibration_decisions"] for x in selected}), 1)
         result = subprocess.run(
             [sys.executable, "-m", "cpht_compare", "all", "--dry-run",
-             "--profile", "cases/cpht_comparison_smoke.json"],
+             "--profile", "experiments/smoke.json"],
             capture_output=True, text=True, check=True)
         self.assertFalse(json.loads(result.stdout)["expensive_training_executed"])
+
+    def test_baseline_is_trained_once_per_mode_case_seed(self):
+        from cpht_compare.config import load, jobs, paths
+        p = load("experiments/full.json")
+        baseline = [j for j in jobs(p) if j["method"] == "ct_sac"]
+        self.assertEqual(len(baseline), len(p["information_modes"]) * len(p["cases"]) * len(p["seeds"]))
+        self.assertTrue(all("model_free" in str(paths(p, j)[3]) for j in baseline))
+        self.assertFalse(p["learning"]["hold_disclosure"])
 
     def test_report_censors_incomplete_course_and_rejects_unpaired_truth(self):
         from cpht_compare.report import seed_summary, validate_pairing
@@ -177,6 +185,46 @@ class DifferentiableTests(unittest.TestCase):
         np.testing.assert_allclose(lambda_targets(rewards, discounts, continuation, values, 1).numpy().ravel(),
                                    [1.9, 2., 31.], rtol=1e-6)
 
+
+@unittest.skipUnless(RUNTIME, "Torch and MuJoCo runtime required")
+class UnifiedPipelineTests(unittest.TestCase):
+    """CT-SAC and a pH method share calibration, sensors and paired evaluation."""
+
+    def test_hidden_hold_and_paired_baseline_end_to_end(self):
+        import tempfile
+        import numpy as np
+        from cpht_compare import config, pipeline
+        from cpht_compare.report import collect
+        from physical_fj.mechanics import PhysicalEnvironment
+        profile = config.load("experiments/smoke.json")
+        profile.update(cases=["F"], methods=["cem", "ct_sac"], information_modes=["sensed_belief"])
+        profile["evaluation"].update(clocks=["irregular"], conditions=["nominal"])
+        with tempfile.TemporaryDirectory() as root:
+            runs, artifacts = f"{root}/runs", f"{root}/artifacts"
+            job_list = list(config.jobs(profile))
+            pipeline.preparation(profile, job_list[0], runs, artifacts)
+            s, c, _, _ = config.paths(profile, job_list[0], runs, artifacts)
+            env = PhysicalEnvironment(c, s, 3, clock="irregular", purpose="evaluation")
+            try:
+                seen, requested = set(), set()
+                for _ in range(30):
+                    seen.add(round(float(env.current["raw"][30]) * c["reference_time"], 6))
+                    requested.add(round(env.hold(), 6))
+                    env.step(np.zeros(6, np.float32))
+            finally:
+                env.close()
+            self.assertEqual(seen, {c["fixed_hold"]})
+            self.assertGreater(len(requested), 1)
+            for job in job_list:
+                result = pipeline.training(profile, job, runs, artifacts)
+                self.assertTrue(result["complete"])
+                run = config.paths(profile, job, runs, artifacts)[3]
+                report = pipeline.evaluate(run / "final.pt", "F", "irregular", "nominal",
+                                           evaluation=profile["evaluation"])
+                self.assertFalse(report["hold_disclosure"])
+                self.assertTrue(all(row["error"] is None for row in report["rows"]))
+            summary = collect(profile, runs, artifacts, f"{root}/report.json")
+            self.assertEqual((summary["report_count"], summary["missing_count"], summary["paired_groups"]), (2, 0, 1))
+
 if __name__ == "__main__":
     unittest.main()
-

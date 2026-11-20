@@ -92,30 +92,6 @@ class MapTests(unittest.TestCase):
         with self.assertRaises(ValueError):make_config("F","contact",overrides={"contact_curriculum":True})
 
 
-class AggregationTests(unittest.TestCase):
-    def test_contact_metrics_average_tasks_before_training_seeds(self):
-        with tempfile.TemporaryDirectory() as temporary:
-            root=Path(temporary);plan=[]
-            for seed in (0,1):
-                c=make_config("J","contact",seed);method="interval_euler"
-                key=run_key(c,method);directory=root/key
-                (directory/"evaluations").mkdir(parents=True)
-                checkpoint=directory/"final.pt";checkpoint.write_bytes(b"synthetic unit-test fixture")
-                plan.append(dict(config=c,method=method,calibration=calibration_key(c),run_id=key))
-                rows=[dict(episode_seed=100000+i,g=g,time_score=1.,
-                           contact_audit={"low_torso_fraction":float(g==10)})
-                      for i,g in enumerate((6,10,10,14))]
-                value=dict(config=c,method=method,rows=rows,family_time_score=1.,train_counters={},
-                           checkpoint_sha256=hashlib.sha256(checkpoint.read_bytes()).hexdigest())
-                (directory/"evaluations/final_test_iid_irregular_n4.json").write_text(json.dumps(value))
-            path=root/"plan.jsonl";path.write_text("".join(json.dumps(x)+"\n" for x in plan))
-            out=root/"report.json"
-            process=subprocess.run([sys.executable,str(ROOT/"aggregate_fj.py"),"--plan",str(path),
-                "--root",str(root),"--episodes","4","--out",str(out)],capture_output=True,text=True)
-            self.assertEqual(process.returncode,0,process.stderr)
-            metrics=json.loads(out.read_text())["results"][0]["contact_metrics"]
-            self.assertAlmostEqual(metrics["low_torso_fraction"]["mean"],1/3)
-            self.assertEqual(set(metrics["low_torso_fraction"]["per_training_seed"]),{"0","1"})
 
 
 @unittest.skipUnless(importlib.util.find_spec("mujoco") and importlib.util.find_spec("dm_control"),

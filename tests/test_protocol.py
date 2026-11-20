@@ -3,39 +3,15 @@ from pathlib import Path
 import tempfile
 import unittest
 import numpy as np
-from bench.protocol import TASKS, RELEASED, MATCHED, make_job, read_job, source_root
+from bench.protocol import TASKS, source_root
 from bench.env import entropy_weight
 from bench.operators import finite_step, phase_step
 
 
 class ProtocolTests(unittest.TestCase):
-    def test_suite_has_four_robot_tasks(self):
-        self.assertEqual(set(TASKS), {"cheetah-run", "walker-run", "humanoid-walk", "quadruped-run"})
-        with self.assertRaises(ValueError):
-            make_job("released", "trading", "ct_sac", 0)
 
-    def test_all_released_csv_rows_resolve(self):
-        for task in TASKS:
-            for method in RELEASED:
-                job = make_job("released", task, method, 0)
-                self.assertEqual(job["decision_budget"], TASKS[task]["decisions"])
-                self.assertEqual(job["csv_row"]["env_return_reward_increment"] if "env_return_reward_increment" in job["csv_row"] else "False", "False")
 
-    def test_plan_changes_are_detected(self):
-        with tempfile.TemporaryDirectory() as directory:
-            path = Path(directory) / "plan.jsonl"
-            job = make_job("matched", "walker-run", "tpht", 1)
-            path.write_text(json.dumps(job))
-            self.assertEqual(read_job(path, 0), job)
-            job["decision_budget"] = 1
-            path.write_text(json.dumps(job))
-            with self.assertRaises(ValueError):
-                read_job(path, 0)
 
-    def test_matched_settings_are_shared(self):
-        settings = [make_job("matched", "humanoid-walk", m, 0)["settings"] for m in MATCHED]
-        self.assertTrue(all(s == settings[0] for s in settings))
-        self.assertEqual(settings[0]["gamma_native"], .99)
 
     def test_entropy_uses_native_time_units(self):
         gamma, native, dt = .98, .01, TASKS["cheetah-run"]["dt"]

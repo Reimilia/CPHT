@@ -18,6 +18,7 @@ from environment_belief.runtime import summarize as summarize_assimilation
 from .config import paths
 from .controller import ComparisonController
 from .learning import Trainer, calibration_replay
+from . import baseline
 
 def preparation(profile, job, run_root, artifact_root):
     s, c, artifact, run = paths(profile, job, run_root, artifact_root)
@@ -52,6 +53,8 @@ def initial_saved(profile, job, s, c, artifact):
 def training(profile, job, run_root, artifact_root, device="cpu", resume=False, pause_episodes=None):
     s, c, artifact, run = paths(profile, job, run_root, artifact_root)
     run.mkdir(parents=True, exist_ok=True)
+    if job["method"] == baseline.METHOD:
+        return baseline.train(profile, job, s, c, artifact, run, device, resume)
     if (run / "final.pt").exists() and not resume:
         return dict(status="existing_complete_checkpoint", checkpoint=str(run / "final.pt"))
     torch.set_num_threads(1)
@@ -60,7 +63,8 @@ def training(profile, job, run_root, artifact_root, device="cpu", resume=False, 
     prototype = make_controller(saved, job["seed"], device)
     trainer = Trainer(prototype, profile["optimization"]) if prototype.selector is not None else None
     bank = calibration_replay(data, saved["normalization"], len(prototype.robot.point_body),
-                              profile["optimization"]["max_replay"], job["seed"] + 173)
+                              profile["optimization"]["max_replay"], job["seed"] + 173,
+                              hold=None if s["hold_disclosure"] else c["fixed_hold"])
     rng = np.random.default_rng(job["seed"] + 823)
     gait = None
     counters = dict(decisions=s["calibration_decisions"], policy_decisions=0, physics_steps=0,
@@ -120,7 +124,7 @@ def training(profile, job, run_root, artifact_root, device="cpu", resume=False, 
                 try:
                     while counters["decisions"] < s["total_decisions"]:
                         before = env.current
-                        action = current.act(before, env.g, env.hold(), env.base.cur_t)
+                        action = current.act(before, env.g, env.announced_hold(), env.base.cur_t)
                         bank.add(current.current_snapshot())
                         sigma = profile["optimization"]["action_noise"]
                         executed = np.clip(action + rng.normal(0, sigma, 6), -1, 1).astype(np.float32)
@@ -222,12 +226,15 @@ def evaluate(checkpoint, test_case, clock, condition, device="cpu", overwrite=Fa
     for i in range(profile["evaluation"]["episodes"]):
         episode_seed = 100000 + i
         env = PhysicalEnvironment(c, s, episode_seed, i, cohort, clock, purpose="evaluation")
-        ctl = make_controller(saved, episode_seed, device, saved["gait"])
-        ctl.load_learned(saved["learned"])
-        if ctl.selector is not None:
-            ctl.selector.eval().requires_grad_(False)
-        if ctl.value is not None:
-            ctl.value.eval().requires_grad_(False)
+        if job["method"] == baseline.METHOD:
+            ctl = baseline.Policy(saved, device)
+        else:
+            ctl = make_controller(saved, episode_seed, device, saved["gait"])
+            ctl.load_learned(saved["learned"])
+            if ctl.selector is not None:
+                ctl.selector.eval().requires_grad_(False)
+            if ctl.value is not None:
+                ctl.value.eval().requires_grad_(False)
         predictions, assimilation, decisions = [], [], []
         step = 0
         discounted_return = 0.
@@ -235,22 +242,26 @@ def evaluate(checkpoint, test_case, clock, condition, device="cpu", overwrite=Fa
         error = None
         budget_censored = False
         recorder = None
-        before_model_hash = digest(saved["pure_model"])
+        frozen = saved["pure_model"] if "pure_model" in saved else saved["sac"]["actor"]
+        before_model_hash = digest({k: np.asarray(v).tolist() for k, v in frozen.items()}
+                                   if "sac" in saved else frozen)
         try:
             if i < profile["evaluation"]["videos"]:
                 from fjbench.recording import EpisodeRecorder
                 recorder = EpisodeRecorder(env, path.parent / "videos" / f"{tag}_{i}.mp4",
                     dict(width=640, height=480, fps=25, overwrite=overwrite, end_card_seconds=1.),
-                    f"CPHT {job['method']} | {job['case']} to {test_case}")
+                    f"{job['method']} | {job['case']} to {test_case}")
             while True:
                 before = env.current
-                action = ctl.act(before, env.g, env.hold(), env.base.cur_t)
+                action = ctl.act(before, env.g, env.announced_hold(), env.base.cur_t)
                 if not np.isfinite(action).all() or abs(action).max() > 1.00001:
                     raise FloatingPointError("Nonfinite or infeasible motor command")
                 after, info, _ = env.step(action)
                 discounted_return += discount * info["R"]
                 discount *= c["gamma_reference"] ** (info["h"] / c["reference_time"])
-                predictions.append(ctl.prediction(before, after, action, info["h"]))
+                prediction = ctl.prediction(before, after, action, info["h"])
+                if prediction is not None:
+                    predictions.append(prediction)
                 decisions.append(dict(ctl.diagnostics, time=env.base.cur_t, actual_hold=info["h"]))
                 if env.sensing is not None:
                     assimilation.append(env.sensing.audit())
@@ -272,7 +283,9 @@ def evaluate(checkpoint, test_case, clock, condition, device="cpu", overwrite=Fa
                        predictions=predictions, controller_trace=decisions,
                        failure_counts=dict(ctl.failure_counts), wall_clock_plans=ctl.plans,
                        predictive_substeps=ctl.predicted_steps, physical_seconds=env.base.cur_t,
-                       model_unchanged=(before_model_hash == digest(saved["pure_model"])))
+                       model_unchanged=(before_model_hash == (
+                           digest({k: np.asarray(v).tolist() for k, v in frozen.items()})
+                           if "sac" in saved else digest(frozen))))
             if assimilation:
                 row.update(assimilation=summarize_assimilation(assimilation),
                            assimilation_trace=assimilation)
@@ -292,6 +305,7 @@ def evaluate(checkpoint, test_case, clock, condition, device="cpu", overwrite=Fa
         evaluation_sensing=s["sensing"], task=c, deployment_parameter_updates=0,
         terminal_value_in_deployment=False,
         nominal_future_hold_approximation=(clock == "irregular"),
+        hold_disclosure=bool(s.get("hold_disclosure", True)),
         imagined_environment="current causal local scan and material estimate, no future acquired evidence")
     result["diagnostic_version"] = "relative_contact_residual_v1"
     write_json(output, result)
@@ -303,7 +317,7 @@ def gradient_check(profile, job, run_root, artifact_root, device="cpu"):
     ctl = make_controller(saved, job["seed"], device)
     env = PhysicalEnvironment(c, s, 12345, purpose="evaluation")
     try:
-        ctl.act(env.current, env.g, env.hold(), env.base.cur_t)
+        ctl.act(env.current, env.g, env.announced_hold(), env.base.cur_t)
         # Double precision reduces finite-difference cancellation; contact branches can still switch.
         from pure_cpht.mechanics import Robot
         from pure_cpht.contact import Contact

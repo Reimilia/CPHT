@@ -139,7 +139,7 @@ def collect(profile, run_root, artifact_root, output):
                   interpretation="Flags include inference limits and numerical diagnostics, separate from task failures")
     write_json(output, result)
     destination = Path(output).with_suffix(".md")
-    text = ["# Pure CPHT comparison", "",
+    text = ["# CPHT experiment report", "",
             f"Reports: {len(reports)}. Missing: {len(missing)}. Smoke only: {profile['smoke_only']}.", "",
             "Task success is omitted when every episode is budget-censored.", "",
             "| Condition/method | Completion | Speed RMSE | Mean decision seconds | Flags |",

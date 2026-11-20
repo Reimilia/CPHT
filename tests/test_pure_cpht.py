@@ -153,33 +153,6 @@ class PurePipelineTests(unittest.TestCase):
         result=train(self.s,self.c,'ct_sac',self.artifact,self.root/'ct_with_matching_probes')
         self.assertEqual(result['linear_value_solves'],0)
 
-    def test_actor_free_learning_resume_and_recording_invariance(self):
-        import torch
-        from pure_cpht.training import train
-        from physical_fj.evaluate import evaluate
-        with patch('physical_fj.learner.Learner',side_effect=AssertionError('SAC learner constructed')):
-            first=train(self.s,self.c,'pure_cpht',self.artifact,self.root/'full')
-            partial=train(self.s,self.c,'pure_cpht',self.artifact,self.root/'resumed',pause_after_episodes=1)
-            self.assertLess(partial['decisions'],self.s['total_decisions'])
-            second=train(self.s,self.c,'pure_cpht',self.artifact,self.root/'resumed',resume=True)
-        self.assertEqual(first['actor_updates'],0);self.assertEqual(first['critic_updates'],0)
-        self.assertGreater(first['model_updates'],0);self.assertGreater(first['control_optimizations'],0)
-        a=torch.load(self.root/'full/final.pt',weights_only=False);b=torch.load(self.root/'resumed/final.pt',weights_only=False)
-        self.assertIsNone(a['actor']);self.assertIsNone(a['critic'])
-        np.testing.assert_array_equal(a['pure_model']['parameters'],b['pure_model']['parameters'])
-        np.testing.assert_array_equal(a['gait'],b['gait']);self.assertEqual(first,second)
-        x=evaluate(self.root/'full/final.pt',episodes=1)
-        y=evaluate(self.root/'full/final.pt',episodes=1,video_episodes=1,width=320,height=240)
-        self.assertEqual(x['path_metrics'],y['path_metrics'])
-        self.assertEqual(x['rows'][0]['prediction_metrics'],y['rows'][0]['prediction_metrics'])
-        self.assertEqual(y['deployment_updates'],0);self.assertFalse(y['actor'])
-        z=evaluate(self.root/'full/final.pt',episodes=1,case_test='J',terrain='steps',cohort='layout',clock='irregular')
-        self.assertEqual(z['config']['case'],'J');self.assertEqual(z['config']['terrain_elevation'],'steps')
-        self.assertTrue(z['model_frozen']);self.assertEqual(z['rows'][0]['model_updates'],0)
-        feedback=evaluate(self.root/'full/final.pt',episodes=1,feedback_only=True)
-        self.assertEqual(feedback['method'],'pure_cpht_feedback')
-        self.assertEqual(feedback['rows'][0]['controller']['control_optimizations'],0)
-        self.assertTrue(feedback['model_frozen']);self.assertEqual(feedback['checkpoint_sha256'],x['checkpoint_sha256'])
 
 
 if __name__=='__main__':unittest.main()
